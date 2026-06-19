@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel ES Card</title>
+<style>
+:root{
+  --brand:#1B4FD8;
+  --navy:#0A1F44;
+  --bg:#F8FAFC;
+  --border:#E2E8F0;
+  --text:#0F172A;
+  --muted:#64748B;
+  --danger:#DC2626;
+  --ok:#059669;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.hidden{display:none !important}
+
+/* ---------- Login ---------- */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.login-box{width:100%;max-width:380px}
+.login-logo{margin:0 auto 12px;width:48px;height:48px;border-radius:12px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.login-title{text-align:center;margin-bottom:24px}
+.login-title h1{font-size:20px;margin:0 0 4px}
+.login-title p{margin:0;color:var(--muted);font-size:14px}
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(15,28,63,.06)}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field span{font-size:14px;font-weight:600;color:#334155}
+.field small{font-size:12px;color:#94A3B8}
+input[type=text],input[type=password],textarea{
+  width:100%;border:1px solid var(--border);border-radius:8px;padding:8px 12px;
+  font-size:14px;font-family:inherit;outline:none;transition:.15s;
+}
+input:focus,textarea:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(27,79,216,.1)}
+textarea{resize:vertical}
+.btn{
+  background:var(--brand);color:#fff;border:none;border-radius:8px;
+  padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;
+}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+.btn-ghost{background:transparent;color:#fff;opacity:.8}
+.btn-ghost:hover{background:rgba(255,255,255,.1);opacity:1}
+.btn-danger{background:#fff;color:var(--danger);border:1px solid #FCA5A5}
+.error-msg{color:var(--danger);font-size:14px;font-weight:600;margin:0 0 12px}
+.warn-box{background:#FFFBEB;border:1px solid #FDE68A;color:#92400E;border-radius:12px;padding:16px;font-size:14px}
+
+/* ---------- Dashboard ---------- */
+header.topbar{position:sticky;top:0;z-index:10;background:var(--navy);border-bottom:1px solid var(--border)}
+.topbar-inner{max-width:960px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.topbar-brand{display:flex;align-items:center;gap:8px}
+.topbar-brand strong{color:#fff;font-size:16px}
+.badge{background:rgba(255,255,255,.15);color:#fff;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px}
+.topbar-actions{display:flex;gap:4px}
+.topbar-actions a, .topbar-actions button{
+  color:rgba(255,255,255,.8);background:none;border:none;font-size:13px;font-weight:600;
+  text-decoration:none;padding:6px 12px;border-radius:8px;cursor:pointer;
+}
+.topbar-actions a:hover, .topbar-actions button:hover{background:rgba(255,255,255,.1)}
+
+main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
+.page-title h1{font-size:24px;margin:0 0 4px}
+.page-title p{margin:0 0 24px;color:var(--muted);font-size:14px}
+
+.tabs{display:flex;flex-wrap:wrap;gap:4px;background:#fff;border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:24px}
+.tab-btn{background:none;border:none;border-radius:8px;padding:8px 12px;font-size:14px;font-weight:600;color:#475569;cursor:pointer}
+.tab-btn.active{background:var(--brand);color:#fff}
+
+.grid-2{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.grid-2{grid-template-columns:1fr 1fr}}
+.span-2{grid-column:1/-1}
+
+.list-item{background:#fff;border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.list-item-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;cursor:pointer;gap:8px}
+.list-item-head strong{font-size:14px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list-item-body{padding:0 16px 16px;border-top:1px solid var(--border)}
+.list-item-actions{display:flex;gap:4px;flex-shrink:0}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;color:#64748B;font-size:14px;line-height:1}
+.icon-btn:hover{background:#F1F5F9}
+.icon-btn.remove{color:var(--danger);border-color:#FCA5A5}
+.grid-3{display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px}
+@media(min-width:640px){.grid-3{grid-template-columns:1fr 1fr 1fr}}
+.add-btn{width:100%;border:1.5px dashed var(--border);border-radius:12px;background:none;padding:12px;font-size:14px;font-weight:600;color:var(--brand);cursor:pointer}
+.add-btn:hover{background:#EEF2FF}
+
+.checkbox-row{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#334155;margin-top:12px}
+
+.save-bar{position:sticky;bottom:0;margin-top:24px;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);
+  border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.save-status{font-size:14px;font-weight:600}
+.save-status.ok{color:var(--ok)}
+.save-status.err{color:var(--danger)}
+
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase}
+.loading{padding:60px 0;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen" class="hidden">
+  <div class="login-box">
+    <div class="login-title">
+      <div class="login-logo">ES</div>
+      <h1>Painel ES Card</h1>
+      <p>Acesso restrito à administração</p>
+    </div>
+
+    <div id="notConfiguredBox" class="warn-box hidden">
+      A senha de administrador ainda não foi configurada. Defina a variável <strong>ADMIN_PASSWORD</strong>
+      nas configurações do projeto (Cloudflare Pages) para acessar o painel.
+    </div>
+
+    <form id="loginForm" class="card hidden" data-form="login">
+      <div class="field">
+        <span>Senha de acesso</span>
+        <input type="password" id="senhaInput" placeholder="Digite sua senha" autocomplete="current-password">
+      </div>
+      <p id="loginError" class="error-msg hidden"></p>
+      <button type="submit" class="btn" id="loginBtn" style="width:100%">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ LOADING ============ -->
+<div id="loadingScreen" class="loading">Carregando...</div>
+
+<!-- ============ DASHBOARD ============ -->
+<div id="dashboard" class="hidden">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-brand">
+        <strong>ES Card</strong>
+        <span class="badge">Painel</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="/" target="_blank" rel="noreferrer">Ver site</a>
+        <button type="button" data-action="logout">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-title">
+      <h1>Editar conteúdo do site</h1>
+      <p>Altere os textos e clique em <strong>Salvar alterações</strong>. As mudanças aparecem no site na hora.</p>
+    </div>
+
+    <div class="tabs" id="tabsBar"></div>
+
+    <div id="tabContent"></div>
+
+    <div class="save-bar" id="saveBar">
+      <span class="save-status" id="saveStatus"></span>
+      <button class="btn" id="saveBtn" type="button" data-action="save">Salvar alterações</button>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+"use strict";
+
+const BRAND = "#1B4FD8";
+
+// ---------- Estado ----------
+let content = null;          // { empresa, stats, produtos, depoimentos, faq }
+let currentTab = "empresa";
+let leads = null;            // carregados sob demanda
+let openItemIndex = {};      // controla quais itens de lista estão expandidos, por seção
+
+const TABS = [
+  { id: "empresa", label: "Contato" },
+  { id: "stats", label: "Números" },
+  { id: "produtos", label: "Produtos" },
+  { id: "depoimentos", label: "Depoimentos" },
+  { id: "faq", label: "Perguntas" },
+  { id: "leads", label: "Leads recebidos" },
+];
+
+const EMPRESA_FIELDS = [
+  { key: "nome", label: "Nome da empresa" },
+  { key: "telefone", label: "Telefone", hint: "Formato exibido no site, ex: (27) 99650-9760" },
+  { key: "whatsapp", label: "WhatsApp (somente números, com 55)", hint: "Ex: 5527996509760 — usado nos botões de WhatsApp" },
+  { key: "whatsappMsg", label: "Mensagem padrão do WhatsApp", area: true },
+  { key: "email", label: "E-mail" },
+  { key: "endereco", label: "Endereço", area: true },
+  { key: "horario", label: "Horário de atendimento" },
+  { key: "cnpj", label: "CNPJ" },
+  { key: "instagram", label: "Link do Instagram" },
+  { key: "areaCliente", label: "Link — Área do Cliente" },
+  { key: "areaLojista", label: "Link — Área do Lojista" },
+];
+
+function esc(str) {
+  const div = document.createElement("div");
+  div.textContent = str == null ? "" : String(str);
+  return div.innerHTML;
+}
+
+// ============================================================
+//  BOOTSTRAP — checa sessão
+// ============================================================
+async function boot() {
+  try {
+    const res = await fetch("/api/admin/session", { cache: "no-store" });
+    const data = await res.json();
+    document.getElementById("loadingScreen").classList.add("hidden");
+    if (data.authed) {
+      await loadContent();
+      showDashboard();
+    } else {
+      showLogin(Boolean(data.configured));
+    }
+  } catch {
+    document.getElementById("loadingScreen").classList.add("hidden");
+    showLogin(true);
+  }
+}
+
+function showLogin(configured) {
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("notConfiguredBox").classList.toggle("hidden", configured);
+  document.getElementById("loginForm").classList.toggle("hidden", !configured);
+}
+
+function showDashboard() {
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  renderTabs();
+  renderTabContent();
+}
+
+// ============================================================
+//  LOGIN / LOGOUT
+// ============================================================
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const senha = document.getElementById("senhaInput").value;
+  const btn = document.getElementById("loginBtn");
+  const errEl = document.getElementById("loginError");
+  errEl.classList.add("hidden");
+  btn.disabled = true;
+  btn.textContent = "Entrando...";
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ senha }),
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      document.getElementById("senhaInput").value = "";
+      await loadContent();
+      showDashboard();
+    } else {
+      errEl.textContent = data.error || "Senha incorreta.";
+      errEl.classList.remove("hidden");
+    }
+  } catch {
+    errEl.textContent = "Erro de conexão. Tente novamente.";
+    errEl.classList.remove("hidden");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Entrar";
+  }
+});
+
+async function logout() {
+  await fetch("/api/admin/logout", { method: "POST" });
+  content = null;
+  showLogin(true);
+}
+
+// ============================================================
+//  CARREGAR / SALVAR CONTEÚDO
+// ============================================================
+async function loadContent() {
+  const res = await fetch("/api/content", { cache: "no-store" });
+  const data = await res.json();
+  const c = (data && data.content) || {};
+  content = {
+    empresa: c.empresa || {},
+    stats: c.stats || [],
+    produtos: c.produtos || [],
+    depoimentos: c.depoimentos || [],
+    faq: c.faq || [],
+  };
+}
+
+async function save() {
+  const btn = document.getElementById("saveBtn");
+  const statusEl = document.getElementById("saveStatus");
+  btn.disabled = true;
+  btn.textContent = "Salvando...";
+  statusEl.textContent = "";
+  statusEl.className = "save-status";
+  try {
+    const res = await fetch("/api/content", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    });
+    if (res.status === 401) {
+      await logout();
+      return;
+    }
+    if (!res.ok) throw new Error();
+    statusEl.textContent = "Alterações salvas! O site já está atualizado.";
+    statusEl.classList.add("ok");
+  } catch {
+    statusEl.textContent = "Erro ao salvar. Tente novamente.";
+    statusEl.classList.add("err");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Salvar alterações";
+    setTimeout(() => {
+      statusEl.textContent = "";
+      statusEl.className = "save-status";
+    }, 5000);
+  }
+}
+
+// ============================================================
+//  TABS
+// ============================================================
+function renderTabs() {
+  const bar = document.getElementById("tabsBar");
+  bar.innerHTML = TABS.map(
+    (t) =>
+      `<button type="button" class="tab-btn ${t.id === currentTab ? "active" : ""}" data-action="set-tab" data-tab="${t.id}">${esc(t.label)}</button>`
+  ).join("");
+  document.getElementById("saveBar").classList.toggle("hidden", currentTab === "leads");
+}
+
+function renderTabContent() {
+  const el = document.getElementById("tabContent");
+  if (currentTab === "empresa") {
+    el.innerHTML = renderEmpresaTab();
+  } else if (currentTab === "stats") {
+    el.innerHTML = renderListTab("stats", "Adicionar número");
+  } else if (currentTab === "produtos") {
+    el.innerHTML = renderListTab("produtos", "Adicionar produto");
+  } else if (currentTab === "depoimentos") {
+    el.innerHTML = renderListTab("depoimentos", "Adicionar depoimento");
+  } else if (currentTab === "faq") {
+    el.innerHTML = renderListTab("faq", "Adicionar pergunta");
+  } else if (currentTab === "leads") {
+    el.innerHTML = `<div class="card"><p style="color:var(--muted)">Carregando leads...</p></div>`;
+    renderLeadsTab();
+  }
+}
+
+// ---------- Aba Contato ----------
+function renderEmpresaTab() {
+  const fields = EMPRESA_FIELDS.map((f) => {
+    const value = content.empresa[f.key] || "";
+    const input = f.area
+      ? `<textarea rows="3" data-action="field-empresa" data-key="${f.key}">${esc(value)}</textarea>`
+      : `<input type="text" data-action="field-empresa" data-key="${f.key}" value="${esc(value)}">`;
+    return `
+      <div class="${f.area ? "span-2" : ""}">
+        <label class="field">
+          <span>${esc(f.label)}</span>
+          ${input}
+          ${f.hint ? `<small>${esc(f.hint)}</small>` : ""}
+        </label>
+      </div>`;
+  }).join("");
+  return `<div class="card grid-2">${fields}</div>`;
+}
+
+// ---------- Abas tipo lista (stats / produtos / depoimentos / faq) ----------
+function itemLabel(section, item) {
+  if (section === "stats") return `${item.n || ""}${item.suf || ""} · ${item.label || ""}`;
+  if (section === "produtos") return item.nome || "Novo produto";
+  if (section === "depoimentos") return item.nome || "Novo depoimento";
+  if (section === "faq") return item.q || "Nova pergunta";
+  return "";
+}
+
+function newItem(section) {
+  if (section === "stats") return { n: "0", suf: "+", label: "Novo indicador" };
+  if (section === "produtos") return { nome: "Novo cartão", desc: "", emoji: "💳", cor: "#1B4FD8", tags: [] };
+  if (section === "depoimentos") return { nome: "", cargo: "", empresa: "", inicial: "?", cor: "#1B4FD8", texto: "" };
+  if (section === "faq") return { q: "", r: "" };
+  return {};
+}
+
+function renderItemBody(section, item, idx) {
+  if (section === "stats") {
+    return `
+      <div class="grid-3">
+        <label class="field"><span>Número</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="n" value="${esc(item.n)}" placeholder="500"></label>
+        <label class="field"><span>Sufixo</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="suf" value="${esc(item.suf)}" placeholder="+"></label>
+        <label class="field"><span>Descrição</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="label" value="${esc(item.label)}"></label>
+      </div>`;
+  }
+  if (section === "produtos") {
+    return `
+      <div class="grid-2">
+        <label class="field"><span>Nome do cartão</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="nome" value="${esc(item.nome)}"></label>
+        <label class="field"><span>Etiquetas (separadas por vírgula)</span><input type="text" data-action="item-tags" data-section="${section}" data-idx="${idx}" value="${esc((item.tags || []).join(", "))}"></label>
+        <label class="field span-2"><span>Descrição</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="desc">${esc(item.desc)}</textarea></label>
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" data-action="item-checkbox" data-section="${section}" data-idx="${idx}" data-key="destaque" ${item.destaque ? "checked" : ""}>
+        Marcar como "Mais popular"
+      </label>`;
+  }
+  if (section === "depoimentos") {
+    return `
+      <div class="grid-3">
+        <label class="field"><span>Nome</span><input type="text" data-action="item-field-nome-inicial" data-section="${section}" data-idx="${idx}" value="${esc(item.nome)}"></label>
+        <label class="field"><span>Cargo</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="cargo" value="${esc(item.cargo)}"></label>
+        <label class="field"><span>Empresa</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="empresa" value="${esc(item.empresa)}"></label>
+      </div>
+      <label class="field" style="margin-top:12px"><span>Depoimento</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="texto">${esc(item.texto)}</textarea></label>`;
+  }
+  if (section === "faq") {
+    return `
+      <label class="field"><span>Pergunta</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="q" value="${esc(item.q)}"></label>
+      <label class="field" style="margin-top:12px"><span>Resposta</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="r">${esc(item.r)}</textarea></label>`;
+  }
+  return "";
+}
+
+function renderListTab(section, addLabel) {
+  const items = content[section] || [];
+  const open = openItemIndex[section] ?? null;
+
+  const rows = items
+    .map((item, idx) => {
+      const isOpen = open === idx;
+      return `
+        <div class="list-item">
+          <div class="list-item-head" data-action="toggle-item" data-section="${section}" data-idx="${idx}">
+            <strong>${esc(itemLabel(section, item))}</strong>
+            <div class="list-item-actions">
+              <button type="button" class="icon-btn" data-action="move-item" data-dir="-1" data-section="${section}" data-idx="${idx}" title="Mover para cima">↑</button>
+              <button type="button" class="icon-btn" data-action="move-item" data-dir="1" data-section="${section}" data-idx="${idx}" title="Mover para baixo">↓</button>
+              <button type="button" class="icon-btn remove" data-action="remove-item" data-section="${section}" data-idx="${idx}">Remover</button>
+            </div>
+          </div>
+          ${isOpen ? `<div class="list-item-body">${renderItemBody(section, item, idx)}</div>` : ""}
+        </div>`;
+    })
+    .join("");
+
+  return `
+    ${rows}
+    <button type="button" class="add-btn" data-action="add-item" data-section="${section}">+ ${esc(addLabel)}</button>
+  `;
+}
+
+// ---------- Aba Leads ----------
+async function renderLeadsTab() {
+  const el = document.getElementById("tabContent");
+  try {
+    const res = await fetch("/api/leads", { cache: "no-store" });
+    if (res.status === 401) {
+      await logout();
+      return;
+    }
+    const data = await res.json();
+    leads = data.leads || [];
+    if (!leads.length) {
+      el.innerHTML = `<div class="card"><p style="color:var(--muted)">Nenhum lead recebido ainda.</p></div>`;
+      return;
+    }
+    el.innerHTML = `
+      <div class="card" style="overflow:auto">
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Tipo</th><th>Nome</th><th>Empresa</th><th>WhatsApp</th><th>E-mail</th><th>Mensagem</th>
+          </tr></thead>
+          <tbody>
+            ${leads
+              .map(
+                (l) => `<tr>
+                  <td>${esc(formatDate(l.recebido_em))}</td>
+                  <td>${esc(l.tipo)}</td>
+                  <td>${esc(l.nome)}</td>
+                  <td>${esc(l.empresa)}</td>
+                  <td>${esc(l.whatsapp)}</td>
+                  <td>${esc(l.email)}</td>
+                  <td>${esc(l.mensagem)}</td>
+                </tr>`
+              )
+              .join("")}
+          </tbody>
+        </table>
+      </div>`;
+  } catch {
+    el.innerHTML = `<div class="card"><p style="color:var(--danger)">Erro ao carregar leads.</p></div>`;
+  }
+}
+
+function formatDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso.includes("T") ? iso : iso.replace(" ", "T") + "Z");
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString("pt-BR");
+}
+
+// ============================================================
+//  EVENT DELEGATION (data-action) — sem onclick inline
+// ============================================================
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-action]");
+  if (!t) return;
+  const action = t.dataset.action;
+
+  if (action === "logout") {
+    logout();
+  } else if (action === "save") {
+    save();
+  } else if (action === "set-tab") {
+    currentTab = t.dataset.tab;
+    renderTabs();
+    renderTabContent();
+  } else if (action === "toggle-item") {
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    openItemIndex[section] = openItemIndex[section] === idx ? null : idx;
+    renderTabContent();
+  } else if (action === "add-item") {
+    const section = t.dataset.section;
+    content[section] = content[section] || [];
+    content[section].push(newItem(section));
+    openItemIndex[section] = content[section].length - 1;
+    renderTabContent();
+  } else if (action === "remove-item") {
+    e.stopPropagation();
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    content[section].splice(idx, 1);
+    openItemIndex[section] = null;
+    renderTabContent();
+  } else if (action === "move-item") {
+    e.stopPropagation();
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    const dir = Number(t.dataset.dir);
+    const arr = content[section];
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= arr.length) return;
+    [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+    openItemIndex[section] = newIdx;
+    renderTabContent();
+  }
+});
+
+document.addEventListener("input", (e) => {
+  const t = e.target.closest("[data-action]");
+  if (!t) return;
+  const action = t.dataset.action;
+
+  if (action === "field-empresa") {
+    content.empresa[t.dataset.key] = t.value;
+  } else if (action === "item-field") {
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    content[section][idx][t.dataset.key] = t.value;
+    if (section === "stats" || section === "produtos" || section === "depoimentos" || section === "faq") {
+      // Atualiza só o título do item na lista, sem perder o foco do campo.
+      const headStrong = t.closest(".list-item").querySelector(".list-item-head strong");
+      if (headStrong) headStrong.textContent = itemLabel(section, content[section][idx]);
+    }
+  } else if (action === "item-tags") {
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    content[section][idx].tags = t.value.split(",").map((s) => s.trim()).filter(Boolean);
+  } else if (action === "item-field-nome-inicial") {
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    content[section][idx].nome = t.value;
+    content[section][idx].inicial = (t.value[0] || "?").toUpperCase();
+    const headStrong = t.closest(".list-item").querySelector(".list-item-head strong");
+    if (headStrong) headStrong.textContent = itemLabel(section, content[section][idx]);
+  }
+});
+
+document.addEventListener("change", (e) => {
+  const t = e.target.closest("[data-action]");
+  if (!t) return;
+  if (t.dataset.action === "item-checkbox") {
+    const section = t.dataset.section;
+    const idx = Number(t.dataset.idx);
+    content[section][idx][t.dataset.key] = t.checked;
+  }
+});
+
+boot();
+})();
+</script>
+</body>
+</html>
