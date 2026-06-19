@@ -73,3 +73,5 @@ o conteúdo do banco lia a resposta da API no formato errado
 (`content.empresa` em vez de `content.content.empresa`), então as
 edições salvas no admin nunca apareciam no site. Esse bug foi corrigido
 nesta versão.
+
+
