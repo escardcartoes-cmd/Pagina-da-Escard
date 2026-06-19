@@ -1,11 +1,14 @@
-name = "escard-site"
+name = "pagina-da-escard"
+main = "src/index.js"
 compatibility_date = "2024-09-23"
-pages_build_output_dir = "public"
 
-# Depois de criar o banco D1 (wrangler d1 create escard-db), troque o
-# database_id abaixo pelo id real retornado, e configure o mesmo binding
-# "DB" no painel da Cloudflare em Settings → Functions → D1 database bindings.
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+# Depois de criar o banco D1, troque o database_id abaixo pelo id real
+# (já temos: 2cd7518f-435d-4fcb-9622-349404dd5323).
 [[d1_databases]]
 binding = "DB"
 database_name = "escard-db"
-database_id = "COLOQUE_AQUI_O_ID_DO_BANCO"
+database_id = "2cd7518f-435d-4fcb-9622-349404dd5323"
