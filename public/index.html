@@ -319,9 +319,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .hero-badge-text { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--blue); letter-spacing: 0.3px; }
 .hero-badge-text svg { color: var(--amber); }
 .hero-title {
-  font-family: var(--font-display); font-size: clamp(38px,4.5vw,62px);
-  font-weight: 900; line-height: 1.08; letter-spacing: -2px; color: var(--navy); margin-bottom: 22px;
+  font-family: var(--font-display); font-size: clamp(32px,4vw,52px);
+  font-weight: 900; line-height: 1.12; letter-spacing: -1.5px; color: var(--navy); margin-bottom: 22px;
 }
+.hero-line { display: block; }
+.hero-line.text-gradient { margin-top: 6px; }
 .hero-sub { font-size: 18px; line-height: 1.68; color: var(--gray-500); margin-bottom: 36px; max-width: 500px; }
 .hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 44px; }
 .hero-social-proof {
@@ -1091,9 +1093,9 @@ function renderHero() {
         <div>
           <div class="hero-badge">
             <span class="hero-badge-dot"></span>
-            <span class="hero-badge-text">${ICON("trophy", 14)} Plataforma capixaba de benefícios corporativos</span>
+            <span class="hero-badge-text">${ICON("trophy", 14)} Soluções corporativas</span>
           </div>
-          <h1 class="hero-title">Soluções que<br>impulsionam empresas.<br><span class="text-gradient">Benefícios que valorizam pessoas.</span></h1>
+          <h1 class="hero-title"><span class="hero-line">Soluções que impulsionam empresas.</span> <span class="text-gradient hero-line">Benefícios que valorizam pessoas.</span></h1>
           <p class="hero-sub">A ES Card conecta empresas capixabas a <strong style="color:var(--navy);font-weight:700">soluções completas em cartões de benefícios</strong>, saúde e private label — com suporte humano local e ativação em 24h.</p>
           <div class="hero-cta-row">
             <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Quero uma Demonstração</button>
