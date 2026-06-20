@@ -223,6 +223,36 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .nav-link:hover { color: var(--blue); background: var(--blue-pale); }
 .nav-link.active { color: var(--blue); font-weight: 700; background: var(--blue-pale); }
 
+/* Dropdown "Soluções" */
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle { display: inline-flex; align-items: center; gap: 4px; }
+.nav-dropdown-toggle .caret { transition: transform .2s; }
+.nav-dropdown:hover .nav-dropdown-toggle .caret,
+.nav-dropdown.open .nav-dropdown-toggle .caret { transform: rotate(180deg); }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%) translateY(8px);
+  min-width: 290px; background: #fff; border: 1px solid var(--gray-200); border-radius: var(--r12);
+  box-shadow: var(--shadow-lg); padding: 8px; opacity: 0; visibility: hidden; transition: all .18s; z-index: 1000;
+}
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown.open .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+.nav-dd-item {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: none; border: none; cursor: pointer; padding: 11px 12px; border-radius: var(--r8); transition: background .15s;
+}
+.nav-dd-item:hover { background: var(--blue-pale); }
+.nav-dd-icon {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--r8);
+  display: flex; align-items: center; justify-content: center; font-size: 19px;
+}
+.nav-dd-text { display: flex; flex-direction: column; }
+.nav-dd-title { font-size: 14px; font-weight: 700; color: var(--navy); }
+.nav-dd-sub { font-size: 12px; color: var(--gray-500); }
+
+/* Sub-grupo "Soluções" no menu mobile */
+.mobile-dd-label { font-size: 13px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; padding: 18px 0 6px; }
+.mobile-dd-item { padding-left: 14px !important; font-size: 16px !important; }
+
 .nav-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .nav-area-link {
   font-size: 12.5px; font-weight: 600; color: var(--gray-600);
@@ -912,13 +942,39 @@ function navigate(path) {
 
 // ---------- Navbar ----------
 function renderNavbar(active) {
-  const navLinks = ROUTES.filter(r => r.path !== "home" && r.path !== "contato").map(r => `
+  // Itens do dropdown "Soluções" (todos levam à página Produtos)
+  const SOLUCOES = [
+    { emoji: "💳", t: "Private Label", s: "Cartão com a marca da sua loja" },
+    { emoji: "🎁", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT" },
+    { emoji: "💰", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento" },
+    { emoji: "🏢", t: "Cartões Corporativos", s: "Frota, despesas e premiação" },
+    { emoji: "❤️", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink" },
+  ];
+  const ddItems = SOLUCOES.map(x => `
+    <button class="nav-dd-item" data-action="nav" data-path="produtos">
+      <span class="nav-dd-icon" style="background:var(--blue-pale)">${x.emoji}</span>
+      <span class="nav-dd-text"><span class="nav-dd-title">${esc(x.t)}</span><span class="nav-dd-sub">${esc(x.s)}</span></span>
+    </button>`).join("");
+
+  // Itens visíveis no topo (fora do dropdown)
+  const topo = [
+    { path: "lojistas", label: "Seja Parceiro" },
+    { path: "quem-somos", label: "Empresa" },
+    { path: "blog", label: "Blog" },
+  ];
+  const topoLinks = topo.map(r => `
     <button class="nav-link${active === r.path ? " active" : ""}" data-action="nav" data-path="${r.path}">${esc(r.label)}</button>
   `).join("");
 
-  const mobileLinks = ROUTES.map(r => `
+  // Menu mobile: Soluções como subgrupo + itens do topo
+  const mobileSolucoes = SOLUCOES.map(x => `
+    <button class="mobile-menu-link mobile-dd-item" data-action="nav" data-path="produtos">${esc(x.t)}</button>
+  `).join("");
+  const mobileTopo = topo.map(r => `
     <button class="mobile-menu-link" data-action="nav" data-path="${r.path}">${esc(r.label)}</button>
   `).join("");
+
+  const solActive = (active === "produtos" || active === "private-label" || active === "cobranca" || active === "bem-estar") ? " active" : "";
 
   return `
   <nav class="navbar" id="navbar">
@@ -926,7 +982,13 @@ function renderNavbar(active) {
       <button class="nav-logo" data-action="nav" data-path="home" aria-label="ES Card — Início">
         <img src="${LOGO_URI}" alt="ES Card" class="nav-logo-img">
       </button>
-      <ul class="nav-links hide-md">${navLinks}</ul>
+      <ul class="nav-links hide-md">
+        <li class="nav-dropdown" data-action="toggle-dropdown">
+          <button class="nav-link nav-dropdown-toggle${solActive}" type="button">Soluções <span class="caret">▾</span></button>
+          <div class="nav-dropdown-menu">${ddItems}</div>
+        </li>
+        ${topoLinks}
+      </ul>
       <div class="nav-actions hide-md">
         <a class="nav-area-link" href="${DATA_EMPRESA.areaCliente}" target="_blank" rel="noopener">Área do Cliente</a>
         <a class="nav-area-link" href="${DATA_EMPRESA.areaLojista}" target="_blank" rel="noopener">Área do Lojista</a>
@@ -938,10 +1000,14 @@ function renderNavbar(active) {
     </div>
   </nav>
   <div class="mobile-menu" id="mobileMenu" hidden>
-    <button class="mobile-menu-close" data-action="toggle-mobile-menu" aria-label="Fechar menu">���</button>
-    ${mobileLinks}
+    <button class="mobile-menu-close" data-action="toggle-mobile-menu" aria-label="Fechar menu">&times;</button>
+    <div class="mobile-dd-label">Soluções</div>
+    ${mobileSolucoes}
+    <div style="height:8px"></div>
+    ${mobileTopo}
     <a class="mobile-menu-link" href="${DATA_EMPRESA.areaCliente}" target="_blank" rel="noopener" style="color:var(--blue)">Área do Cliente →</a>
     <a class="mobile-menu-link" href="${DATA_EMPRESA.areaLojista}" target="_blank" rel="noopener" style="color:var(--blue)">Área do Lojista →</a>
+    <button class="btn btn-primary btn-block" data-action="nav" data-path="contato" style="margin-top:12px">Falar com Especialista</button>
   </div>`;
 }
 
@@ -1172,7 +1238,7 @@ function renderSimuladorReceita() {
             .map(([t, s]) => `
             <div class="calc-feature">
               <div class="calc-feature-icon">${ICON("check", 18)}</div>
-              <div><div class="calc-feature-title">${t}</div><div class="calc-feature-sub">${s}</div></div>
+              <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
             </div>`).join("")}
         </div>
       </div>
@@ -2058,7 +2124,16 @@ document.addEventListener("click", (e) => {
 
   if (action === "nav") {
     e.preventDefault();
+    // Fecha o menu mobile ao navegar
+    const mm = document.getElementById("mobileMenu");
+    if (mm && !mm.hasAttribute("hidden")) { mm.setAttribute("hidden", ""); document.body.style.overflow = ""; }
+    // Fecha o dropdown aberto
+    document.querySelectorAll(".nav-dropdown.open").forEach(d => d.classList.remove("open"));
     E.navigate(target.dataset.path);
+  } else if (action === "toggle-dropdown") {
+    // No mobile/touch, alterna o dropdown ao tocar no "Soluções"
+    if (e.target.closest(".nav-dd-item")) return; // clique num item já é tratado por "nav"
+    target.classList.toggle("open");
   } else if (action === "wa-form") {
     e.preventDefault();
     const form = document.getElementById(target.dataset.formId);
