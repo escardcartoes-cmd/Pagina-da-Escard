@@ -168,7 +168,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   text-decoration: none;
 }
 .btn-md { font-size: 15px; padding: 13px 26px; border-radius: var(--r12); }
-.btn-sm { font-size: 13px; padding: 9px 18px; border-radius: var(--r8); }
+.btn-sm { font-size: 14px; padding: 10px 20px; border-radius: var(--r8); }
 .btn-lg { font-size: 16px; padding: 16px 34px; border-radius: var(--r16); }
 .btn-block { width: 100%; justify-content: center; }
 
@@ -217,8 +217,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; justify-content: center; }
 .nav-link {
   background: none; border: none; cursor: pointer;
-  font-size: 13.5px; font-weight: 500; padding: 8px 12px; border-radius: var(--r8);
-  color: var(--gray-600); transition: all .18s;
+  font-size: 15px; font-weight: 600; padding: 8px 14px; border-radius: var(--r8);
+  color: var(--navy); transition: all .18s; font-family: inherit;
 }
 .nav-link:hover { color: var(--blue); background: var(--blue-pale); }
 .nav-link.active { color: var(--blue); font-weight: 700; background: var(--blue-pale); }
@@ -246,8 +246,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   display: flex; align-items: center; justify-content: center; font-size: 19px;
 }
 .nav-dd-text { display: flex; flex-direction: column; }
-.nav-dd-title { font-size: 14px; font-weight: 700; color: var(--navy); }
-.nav-dd-sub { font-size: 12px; color: var(--gray-500); }
+.nav-dd-title { font-size: 14.5px; font-weight: 700; color: var(--navy); }
+.nav-dd-sub { font-size: 12.5px; color: var(--gray-500); margin-top: 1px; }
 
 /* Sub-grupo "Soluções" no menu mobile */
 .mobile-dd-label { font-size: 13px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; padding: 18px 0 6px; }
@@ -255,8 +255,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 
 .nav-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .nav-area-link {
-  font-size: 12.5px; font-weight: 600; color: var(--gray-600);
-  padding: 8px 12px; border-radius: var(--r8); border: 1px solid var(--gray-200);
+  font-size: 14px; font-weight: 600; color: var(--navy);
+  padding: 9px 16px; border-radius: var(--r8); border: 1px solid var(--gray-200);
   transition: all .18s; white-space: nowrap;
 }
 .nav-area-link:hover { border-color: var(--blue); color: var(--blue); }
@@ -944,15 +944,15 @@ function navigate(path) {
 function renderNavbar(active) {
   // Itens do dropdown "Soluções" (todos levam à página Produtos)
   const SOLUCOES = [
-    { emoji: "💳", t: "Private Label", s: "Cartão com a marca da sua loja" },
-    { emoji: "🎁", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT" },
-    { emoji: "💰", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento" },
-    { emoji: "🏢", t: "Cartões Corporativos", s: "Frota, despesas e premiação" },
-    { emoji: "❤️", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink" },
+    { ic: "layers", t: "Private Label", s: "Cartão com a marca da sua loja" },
+    { ic: "gift", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT" },
+    { ic: "coins", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento" },
+    { ic: "building", t: "Cartões Corporativos", s: "Frota, despesas e premiação" },
+    { ic: "heart", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink" },
   ];
   const ddItems = SOLUCOES.map(x => `
     <button class="nav-dd-item" data-action="nav" data-path="produtos">
-      <span class="nav-dd-icon" style="background:var(--blue-pale)">${x.emoji}</span>
+      <span class="nav-dd-icon" style="background:var(--blue-pale);color:var(--blue)">${ICON(x.ic, 19)}</span>
       <span class="nav-dd-text"><span class="nav-dd-title">${esc(x.t)}</span><span class="nav-dd-sub">${esc(x.s)}</span></span>
     </button>`).join("");
 
