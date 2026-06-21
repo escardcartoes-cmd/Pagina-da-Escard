@@ -463,9 +463,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
  .calc-total-label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8); }
 .calc-total-val { font-size: 26px; font-weight: 900; color: var(--amber); font-family: var(--font-display); letter-spacing: -1px; }
 .calc-disclaimer { text-align: center; font-size: 11px; color: rgba(255,255,255,.25); margin-top: 10px; }
-.calc-sim-tab-btn { padding: 10px 20px; border-radius: 999px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: 14px; font-weight: 700; cursor: pointer; transition: all .15s; }
-.calc-sim-tab-btn:hover { border-color: var(--brand); color: var(--brand); }
-.calc-sim-tab-btn.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.calc-sim-tab-btn { padding: 10px 20px; border-radius: 999px; border: 1.5px solid var(--gray-200); background: #fff; color: var(--gray-500); font-size: 14px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.calc-sim-tab-btn:hover { border-color: var(--blue); color: var(--blue); }
+.calc-sim-tab-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
 .calc-sim-pane { animation: fadeIn .2s ease; }
 
 /* ============================================================
@@ -1258,24 +1258,24 @@ function renderSimuladorReceita() {
                 .map(([t, s]) => `
                 <div class="calc-feature">
                   <div class="calc-feature-icon">${ICON("check", 18)}</div>
-                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--gray-500)">${s}</div></div>
                 </div>`).join("")}
             </div>
           </div>
-          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+          <div class="calc-box" style="background:#fff;border:1px solid var(--gray-200)">
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de cartões ativos</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Número de cartões ativos</label></div>
               <input type="number" id="simCartoes" value="5000" min="0" step="100"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Ticket médio mensal por cartão (R$)</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Ticket médio mensal por cartão (R$)</label></div>
               <input type="number" id="simTicket" value="350" min="0" step="10"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
-              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simVolume" style="color:var(--navy)">—</span></div>
-              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simMes" style="color:var(--green)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simVolume" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simAno" style="color:var(--navy)">—</span></div>
             </div>
             <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
@@ -1292,26 +1292,26 @@ function renderSimuladorReceita() {
                 .map(([t, s]) => `
                 <div class="calc-feature">
                   <div class="calc-feature-icon">${ICON("check", 18)}</div>
-                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--gray-500)">${s}</div></div>
                 </div>`).join("")}
             </div>
           </div>
-          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+          <div class="calc-box" style="background:#fff;border:1px solid var(--gray-200)">
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de cartões ativos</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Número de cartões ativos</label></div>
               <input type="number" id="simPosCartoes" value="5000" min="0" step="100"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Ticket médio mensal por cartão (R$)</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Ticket médio mensal por cartão (R$)</label></div>
               <input type="number" id="simPosTicket" value="350" min="0" step="10"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
-              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simPosVolume" style="color:var(--navy)">—</span></div>
-              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida do cartão/mês</span><span class="calc-result-val" id="simPosCartao" style="color:var(--navy)">—</span></div>
-              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Receita líquida do float/mês</span><span class="calc-result-val" id="simPosFloat" style="color:var(--navy)">—</span></div>
-              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida total/mês</span><span class="calc-result-val" id="simPosMes" style="color:var(--green)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simPosVolume" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida do cartão/mês</span><span class="calc-result-val" id="simPosCartao" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("coins", 16)} Receita líquida do float/mês</span><span class="calc-result-val" id="simPosFloat" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida total/mês</span><span class="calc-result-val" id="simPosMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simPosAno" style="color:var(--navy)">—</span></div>
             </div>
             <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
@@ -1328,24 +1328,24 @@ function renderSimuladorReceita() {
                 .map(([t, s]) => `
                 <div class="calc-feature">
                   <div class="calc-feature-icon">${ICON("check", 18)}</div>
-                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--gray-500)">${s}</div></div>
                 </div>`).join("")}
             </div>
           </div>
-          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+          <div class="calc-box" style="background:#fff;border:1px solid var(--gray-200)">
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de funcionários elegíveis</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Número de funcionários elegíveis</label></div>
               <input type="number" id="simConsFunc" value="500" min="0" step="50"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-slider-row">
-              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Valor médio do empréstimo (R$)</label></div>
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--gray-500)">Valor médio do empréstimo (R$)</label></div>
               <input type="number" id="simConsValor" value="4000" min="0" step="500"
-                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+                style="width:100%;height:44px;border:1.5px solid var(--gray-200);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
             </div>
             <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
-              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Carteira total estimada</span><span class="calc-result-val" id="simConsCarteira" style="color:var(--navy)">—</span></div>
-              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simConsMes" style="color:var(--green)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("coins", 16)} Carteira total estimada</span><span class="calc-result-val" id="simConsCarteira" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simConsMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simConsAno" style="color:var(--navy)">—</span></div>
             </div>
             <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
