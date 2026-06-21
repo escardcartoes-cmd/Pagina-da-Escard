@@ -922,6 +922,7 @@ const ROUTES = [
   { path: "private-label", label: "Private Label" },
   { path: "bem-estar",     label: "Bem-estar" },
   { path: "cobranca",      label: "Cobrança" },
+  { path: "corporativos",  label: "Cartões Corporativos" },
   { path: "lojistas",      label: "Lojistas" },
   { path: "blog",          label: "Blog" },
   { path: "quem-somos",    label: "Quem Somos" },
@@ -944,16 +945,16 @@ function navigate(path) {
 
 // ---------- Navbar ----------
 function renderNavbar(active) {
-  // Itens do dropdown "Soluções" (todos levam à página Produtos)
+  // Itens do dropdown "Soluções" — cada um vai para sua página
   const SOLUCOES = [
-    { ic: "layers", t: "Private Label", s: "Cartão com a marca da sua loja" },
-    { ic: "gift", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT" },
-    { ic: "coins", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento" },
-    { ic: "building", t: "Cartões Corporativos", s: "Frota, despesas e premiação" },
-    { ic: "heart", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink" },
+    { ic: "layers", t: "Private Label", s: "Cartão com a marca da sua loja", path: "private-label" },
+    { ic: "gift", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT", path: "produtos" },
+    { ic: "coins", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento", path: "cobranca" },
+    { ic: "building", t: "Cartões Corporativos", s: "Frota, despesas e premiação", path: "corporativos" },
+    { ic: "heart", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink", path: "bem-estar" },
   ];
   const ddItems = SOLUCOES.map(x => `
-    <button class="nav-dd-item" data-action="nav" data-path="produtos">
+    <button class="nav-dd-item" data-action="nav" data-path="${x.path}">
       <span class="nav-dd-icon" style="background:var(--blue-pale);color:var(--blue)">${ICON(x.ic, 19)}</span>
       <span class="nav-dd-text"><span class="nav-dd-title">${esc(x.t)}</span><span class="nav-dd-sub">${esc(x.s)}</span></span>
     </button>`).join("");
@@ -970,7 +971,7 @@ function renderNavbar(active) {
 
   // Menu mobile: Soluções como subgrupo + itens do topo
   const mobileSolucoes = SOLUCOES.map(x => `
-    <button class="mobile-menu-link mobile-dd-item" data-action="nav" data-path="produtos">${esc(x.t)}</button>
+    <button class="mobile-menu-link mobile-dd-item" data-action="nav" data-path="${x.path}">${esc(x.t)}</button>
   `).join("");
   const mobileTopo = topo.map(r => `
     <button class="mobile-menu-link" data-action="nav" data-path="${r.path}">${esc(r.label)}</button>
@@ -1633,6 +1634,49 @@ window.ESCARD.renderPageCobranca = function () {
 
 })();
 // ============================================================
+//  PÁGINA: CARTÕES CORPORATIVOS
+// ============================================================
+(function () {
+"use strict";
+
+window.ESCARD.renderPageCorporativos = function () {
+  const items = [
+    { ic: "fuel", t: "Cartão Frota / Combustível", d: "Gestão de abastecimento da frota com controle por veículo, limites e relatórios em ampla rede de postos credenciados.", tags: ["Frota", "Controle", "Relatórios"] },
+    { ic: "clipboard", t: "Cartão Despesas Corporativas", d: "Centralize despesas da empresa com limites configuráveis, comprovação simplificada e visão consolidada dos gastos.", tags: ["Despesas", "Limites", "Gestão"] },
+    { ic: "trophy", t: "Cartão Premiação / Incentivo", d: "Ferramenta estratégica para campanhas internas. Reconheça metas e fortaleça o engajamento da equipe.", tags: ["Incentivo", "Campanhas"] },
+    { ic: "gift", t: "Cartão Presente Corporativo", d: "Presenteie colaboradores, clientes e parceiros com liberdade de escolha e ampla rede de aceitação.", tags: ["Presente", "Versátil"] },
+    { ic: "coins", t: "Cartão Consignado", d: "Crédito com desconto em folha, taxas reduzidas e processo simples para empresa e colaborador.", tags: ["Crédito", "Folha"] },
+    { ic: "handshake", t: "Cartão Cooperativa", d: "Solução sob a marca da cooperativa para valorizar associados com benefícios e identidade própria.", tags: ["Cooperativa", "Marca própria"] },
+  ];
+  const cards = items.map(item => `
+    <div class="cobranca-card">
+      <div class="cobranca-icon">${ICON(item.ic, 24)}</div>
+      <div style="font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px">${item.t}</div>
+      <p style="font-size:13.5px;line-height:1.6;color:var(--gray-500);margin-bottom:14px">${item.d}</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${item.tags.map(t => `<span class="tag" style="background:var(--blue-pale);color:var(--blue)">${t}</span>`).join("")}</div>
+    </div>`).join("");
+
+  return `
+  <div class="page-in" style="padding-top:68px">
+    <div class="page-hero">
+      <div class="container">
+        <h1 class="page-hero-title">Cartões corporativos<br><span>sob medida para sua gestão</span></h1>
+        <p class="page-hero-sub">Frota, despesas, premiação e mais. Controle total, identidade da sua empresa e relatórios para decisões melhores.</p>
+      </div>
+    </div>
+    <section class="section">
+      <div class="container">
+        <div class="cobranca-grid">${cards}</div>
+        <div style="text-align:center;margin-top:8px">
+          <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista →</button>
+        </div>
+      </div>
+    </section>
+  </div>`;
+};
+
+})();
+// ============================================================
 //  PÁGINA: LOJISTAS
 // ============================================================
 (function () {
@@ -1902,6 +1946,7 @@ const PAGE_RENDERERS = {
   "private-label": E.renderPagePrivateLabel,
   "bem-estar":     E.renderPageBemEstar,
   "cobranca":      E.renderPageCobranca,
+  "corporativos":  E.renderPageCorporativos,
   "lojistas":      E.renderPageLojistas,
   "blog":          E.renderPageBlog,
   "quem-somos":    E.renderPageQuemSomos,
