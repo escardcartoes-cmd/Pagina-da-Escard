@@ -181,6 +181,7 @@ const TABS = [
   { id: "depoimentos", label: "Depoimentos" },
   { id: "faq", label: "Perguntas" },
   { id: "simulador", label: "Simulador" },
+  { id: "blog", label: "Blog" },
   { id: "leads", label: "Leads recebidos" },
 ];
 
@@ -292,6 +293,7 @@ async function loadContent() {
     produtos: c.produtos || [],
     depoimentos: c.depoimentos || [],
     faq: c.faq || [],
+    blog: (c.blog && Array.isArray(c.blog)) ? c.blog : [],
     simulador: {
       // Private Label — valores-padrão idênticos à ferramenta interna original
       pl: Object.assign(
@@ -374,6 +376,8 @@ function renderTabContent() {
     el.innerHTML = renderListTab("faq", "Adicionar pergunta");
   } else if (currentTab === "simulador") {
     el.innerHTML = renderSimuladorTab();
+  } else if (currentTab === "blog") {
+    el.innerHTML = renderListTab("blog", "Adicionar post");
   } else if (currentTab === "leads") {
     el.innerHTML = `<div class="card"><p style="color:var(--muted)">Carregando leads...</p></div>`;
     renderLeadsTab();
@@ -480,6 +484,7 @@ function itemLabel(section, item) {
   if (section === "produtos") return item.nome || "Novo produto";
   if (section === "depoimentos") return item.nome || "Novo depoimento";
   if (section === "faq") return item.q || "Nova pergunta";
+  if (section === "blog") return item.titulo || "Novo post";
   return "";
 }
 
@@ -488,6 +493,7 @@ function newItem(section) {
   if (section === "produtos") return { nome: "Novo cartão", desc: "", emoji: "💳", cor: "#1B4FD8", tags: [] };
   if (section === "depoimentos") return { nome: "", cargo: "", empresa: "", inicial: "?", cor: "#1B4FD8", texto: "" };
   if (section === "faq") return { q: "", r: "" };
+  if (section === "blog") return { titulo: "", resumo: "", cat: "Novidades", catCor: "#1B4FD8", data: new Date().toLocaleDateString("pt-BR", {day:"2-digit",month:"short",year:"numeric"}).replace(/\./g,""), tempo: "3 min", emoji: "sparkles", bg: "linear-gradient(135deg,#1B4FD8,#0F2860)", destaque: false };
   return {};
 }
 
@@ -525,6 +531,47 @@ function renderItemBody(section, item, idx) {
     return `
       <label class="field"><span>Pergunta</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="q" value="${esc(item.q)}"></label>
       <label class="field" style="margin-top:12px"><span>Resposta</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="r">${esc(item.r)}</textarea></label>`;
+  }
+  if (section === "blog") {
+    const EMOJIS = [
+      { v: "sparkles", l: "✨ Destaque" },
+      { v: "clipboard", l: "📋 Legislação" },
+      { v: "chart", l: "📊 Dados" },
+      { v: "heart", l: "❤️ Saúde" },
+      { v: "trending", l: "📈 Tendência" },
+      { v: "zap", l: "⚡ Novidade" },
+      { v: "building", l: "🏢 Empresa" },
+      { v: "coins", l: "💰 Financeiro" },
+      { v: "pill", l: "💊 Bem-estar" },
+    ];
+    const emojiOptions = EMOJIS.map(e => `<option value="${e.v}" ${item.emoji === e.v ? "selected" : ""}>${e.l}</option>`).join("");
+    const bgOptions = [
+      { v: "linear-gradient(135deg,#1B4FD8,#0F2860)", l: "Azul Navy" },
+      { v: "linear-gradient(135deg,#7C3AED,#5B21B6)", l: "Roxo" },
+      { v: "linear-gradient(135deg,#059669,#047857)", l: "Verde" },
+      { v: "linear-gradient(135deg,#D97706,#92400E)", l: "Âmbar" },
+      { v: "linear-gradient(135deg,#DC2626,#991B1B)", l: "Vermelho" },
+      { v: "linear-gradient(135deg,#0284C7,#075985)", l: "Azul Claro" },
+    ].map(b => `<option value="${b.v}" ${item.bg === b.v ? "selected" : ""}>${b.l}</option>`).join("");
+    return `
+      <div class="grid-2">
+        <label class="field span-2"><span>Título do post *</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="titulo" value="${esc(item.titulo)}" placeholder="Ex: Como o Wellhub reduz turnover"></label>
+        <label class="field span-2"><span>Resumo (aparece no card)</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="resumo">${esc(item.resumo)}</textarea></label>
+        <label class="field"><span>Categoria</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="cat" value="${esc(item.cat)}" placeholder="Ex: Legislação, RH Estratégico"></label>
+        <label class="field"><span>Cor da categoria (hex)</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="catCor" value="${esc(item.catCor)}" placeholder="#1B4FD8"></label>
+        <label class="field"><span>Data de publicação</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="data" value="${esc(item.data)}" placeholder="Ex: 12 Jun 2026"></label>
+        <label class="field"><span>Tempo de leitura</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="tempo" value="${esc(item.tempo)}" placeholder="Ex: 5 min"></label>
+        <label class="field"><span>Ícone do card</span>
+          <select data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="emoji">${emojiOptions}</select>
+        </label>
+        <label class="field"><span>Cor de fundo do card</span>
+          <select data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="bg">${bgOptions}</select>
+        </label>
+      </div>
+      <label class="checkbox-row" style="margin-top:12px">
+        <input type="checkbox" data-action="item-checkbox" data-section="${section}" data-idx="${idx}" data-key="destaque" ${item.destaque ? "checked" : ""}>
+        Marcar como post destaque (aparece maior, no topo)
+      </label>`;
   }
   return "";
 }
@@ -668,7 +715,7 @@ document.addEventListener("input", (e) => {
     const section = t.dataset.section;
     const idx = Number(t.dataset.idx);
     content[section][idx][t.dataset.key] = t.value;
-    if (section === "stats" || section === "produtos" || section === "depoimentos" || section === "faq") {
+    if (section === "stats" || section === "produtos" || section === "depoimentos" || section === "faq" || section === "blog") {
       // Atualiza só o título do item na lista, sem perder o foco do campo.
       const headStrong = t.closest(".list-item").querySelector(".list-item-head strong");
       if (headStrong) headStrong.textContent = itemLabel(section, content[section][idx]);
