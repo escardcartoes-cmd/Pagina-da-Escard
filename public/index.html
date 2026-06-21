@@ -463,6 +463,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
  .calc-total-label { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: rgba(255,255,255,.8); }
 .calc-total-val { font-size: 26px; font-weight: 900; color: var(--amber); font-family: var(--font-display); letter-spacing: -1px; }
 .calc-disclaimer { text-align: center; font-size: 11px; color: rgba(255,255,255,.25); margin-top: 10px; }
+.calc-sim-tab-btn { padding: 10px 20px; border-radius: 999px; border: 1.5px solid var(--border); background: #fff; color: var(--muted); font-size: 14px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.calc-sim-tab-btn:hover { border-color: var(--brand); color: var(--brand); }
+.calc-sim-tab-btn.active { background: var(--brand); border-color: var(--brand); color: #fff; }
+.calc-sim-pane { animation: fadeIn .2s ease; }
 
 /* ============================================================
    COMO FUNCIONA / DIFERENCIAIS
@@ -815,10 +819,15 @@ const DATA_BEMESTAR = [
   { emoji: "heart", nome: "Viva+",    cor: "#10B981", tag: "Saúde Digital", desc: "Scanner de saúde por selfie, telemedicina, IA emocional 24/7 e academia digital.", features: ["Scanner de saúde por selfie — 97% acurácia", "15 teleorientações + 5 teleconsultas/mês", "IA emocional 24/7 por WhatsApp (NR-1)", "Academia digital com 600+ aulas"], stat: "+180k", statL: "vidas impactadas pela plataforma" },
 ];
 
-// Taxas do simulador de rentabilidade (Private Label). Ocultas do público,
+// Taxas dos simuladores de rentabilidade. Ocultas do público,
 // configuráveis no /admin.html. Defaults idênticos à ferramenta interna.
 const DATA_SIMULADOR = {
   pl: { mdr: 2.5, parc: 40, juro: 3.0, anuidade: 8, mora: 1.0, multa: 2.0, encfin: 1.5, prod: 2.0, fin: 1.5, inad: 8 },
+  pos: {
+    mdr: 2.5, parc: 40, juro: 3.0, anuidade: 8, mora: 1.0, multa: 2.0, encfin: 1.5, prod: 2.0, fin: 1.5, inad: 8,
+    dias: 5, pctFloat: 70, cdi: 10.5, cdbPct: 100, lciPct: 88, selicPct: 100, prazoDias: 30,
+  },
+  cons: { adesao: 25, prazo: 24, taxa: 2.2, mora: 1.0, multa: 2.0, encfin: 1.5, fund: 0.95, inad: 1.2 },
 };
 
 window.ESCARD = { CONFIG, LOGO_URI, DATA_EMPRESA, DATA_STATS, DATA_LOGOS, DATA_PRODUTOS, DATA_DEPOIMENTOS, DATA_FAQ, DATA_BLOG, DATA_BEMESTAR, DATA_SIMULADOR };
@@ -1233,36 +1242,116 @@ function renderCalculadora() {
 function renderSimuladorReceita() {
   return `
   <section class="calc-section" id="simulador-receita" style="background:var(--offwhite)">
-    <div class="container calc-grid grid-1-on-md">
-      <div>
-        ${SH({ eyebrow: "Simulador de Receita", title: "Quanto sua operação<br>pode faturar?", sub: "Informe o número de cartões e o ticket médio. Veja o potencial de receita estimada da modalidade Private Label.", align: "left" })}
-        <div class="calc-feature-list">
-          ${[["Receita por MDR", "Sobre o volume transacionado"], ["Juros e produtos", "Parcelamento e serviços adicionais"], ["Receita já líquida", "Considera perdas e inadimplência"], ["Estimativa mensal e anual", "Projeção imediata"]]
-            .map(([t, s]) => `
-            <div class="calc-feature">
-              <div class="calc-feature-icon">${ICON("check", 18)}</div>
-              <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
-            </div>`).join("")}
+    <div class="container">
+      ${SH({ eyebrow: "Simulador de Receita", title: "Quanto sua operação<br>pode faturar?", sub: "Escolha a modalidade e veja o potencial de receita estimada — já líquida de perdas e inadimplência." })}
+      <div class="calc-sim-tabs" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
+        <button type="button" class="calc-sim-tab-btn active" data-action="sim-tab" data-sim="pl">Private Label</button>
+        <button type="button" class="calc-sim-tab-btn" data-action="sim-tab" data-sim="pos">Private Pós</button>
+        <button type="button" class="calc-sim-tab-btn" data-action="sim-tab" data-sim="cons">Consignado</button>
+      </div>
+
+      <div class="calc-sim-pane active" id="simPane-pl">
+        <div class="calc-grid grid-1-on-md">
+          <div>
+            <div class="calc-feature-list">
+              ${[["Receita por MDR", "Sobre o volume transacionado"], ["Juros e produtos", "Parcelamento e serviços adicionais"], ["Receita já líquida", "Considera perdas e inadimplência"], ["Estimativa mensal e anual", "Projeção imediata"]]
+                .map(([t, s]) => `
+                <div class="calc-feature">
+                  <div class="calc-feature-icon">${ICON("check", 18)}</div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                </div>`).join("")}
+            </div>
+          </div>
+          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de cartões ativos</label></div>
+              <input type="number" id="simCartoes" value="5000" min="0" step="100"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Ticket médio mensal por cartão (R$)</label></div>
+              <input type="number" id="simTicket" value="350" min="0" step="10"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simVolume" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simMes" style="color:var(--green)">—</span></div>
+              <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simAno" style="color:var(--navy)">—</span></div>
+            </div>
+            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Private Label. Os valores reais variam conforme contrato, perfil da carteira e condições de mercado.</p>
+          </div>
         </div>
       </div>
-      <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
-        <div class="calc-slider-row">
-          <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de cartões ativos</label></div>
-          <input type="number" id="simCartoes" value="5000" min="0" step="100"
-            style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+
+      <div class="calc-sim-pane" id="simPane-pos" style="display:none">
+        <div class="calc-grid grid-1-on-md">
+          <div>
+            <div class="calc-feature-list">
+              ${[["Receita do cartão", "MDR, juros e produtos, já líquidos"], ["Receita de float", "Rendimento do saldo em renda fixa"], ["Melhor instrumento", "Compara CDB, LCI/LCA, Selic e IPCA+"], ["Estimativa mensal e anual", "Projeção imediata"]]
+                .map(([t, s]) => `
+                <div class="calc-feature">
+                  <div class="calc-feature-icon">${ICON("check", 18)}</div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                </div>`).join("")}
+            </div>
+          </div>
+          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de cartões ativos</label></div>
+              <input type="number" id="simPosCartoes" value="5000" min="0" step="100"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Ticket médio mensal por cartão (R$)</label></div>
+              <input type="number" id="simPosTicket" value="350" min="0" step="10"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simPosVolume" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida do cartão/mês</span><span class="calc-result-val" id="simPosCartao" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Receita líquida do float/mês</span><span class="calc-result-val" id="simPosFloat" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida total/mês</span><span class="calc-result-val" id="simPosMes" style="color:var(--green)">—</span></div>
+              <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simPosAno" style="color:var(--navy)">—</span></div>
+            </div>
+            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Private Pós, incluindo float em renda fixa. Os valores reais variam conforme contrato, taxas de mercado e perfil da carteira.</p>
+          </div>
         </div>
-        <div class="calc-slider-row">
-          <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Ticket médio mensal por cartão (R$)</label></div>
-          <input type="number" id="simTicket" value="350" min="0" step="10"
-            style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+      </div>
+
+      <div class="calc-sim-pane" id="simPane-cons" style="display:none">
+        <div class="calc-grid grid-1-on-md">
+          <div>
+            <div class="calc-feature-list">
+              ${[["Carteira por adesão", "Funcionários elegíveis × % de adesão"], ["Receita de juros", "Sobre a carteira total emprestada"], ["Receita já líquida", "Considera funding e inadimplência"], ["Estimativa mensal e anual", "Projeção imediata"]]
+                .map(([t, s]) => `
+                <div class="calc-feature">
+                  <div class="calc-feature-icon">${ICON("check", 18)}</div>
+                  <div><div class="calc-feature-title" style="color:var(--navy)">${t}</div><div class="calc-feature-sub" style="color:var(--muted)">${s}</div></div>
+                </div>`).join("")}
+            </div>
+          </div>
+          <div class="calc-box" style="background:#fff;border:1px solid var(--border)">
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Número de funcionários elegíveis</label></div>
+              <input type="number" id="simConsFunc" value="500" min="0" step="50"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-slider-row">
+              <div class="calc-slider-head"><label class="calc-slider-label" style="color:var(--muted)">Valor médio do empréstimo (R$)</label></div>
+              <input type="number" id="simConsValor" value="4000" min="0" step="500"
+                style="width:100%;height:44px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-size:16px;font-weight:600;color:var(--navy)">
+            </div>
+            <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
+              <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Carteira total estimada</span><span class="calc-result-val" id="simConsCarteira" style="color:var(--navy)">—</span></div>
+              <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simConsMes" style="color:var(--green)">—</span></div>
+              <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simConsAno" style="color:var(--navy)">—</span></div>
+            </div>
+            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Consignado. Os valores reais variam conforme % de adesão real, prazo contratado e perfil da folha.</p>
+          </div>
         </div>
-        <div class="calc-results" style="background:rgba(27,79,216,.06);border:1px solid rgba(27,79,216,.15)">
-          <div class="calc-result-row"><span class="calc-result-label" style="color:var(--muted)">${ICON("coins", 16)} Volume mensal estimado</span><span class="calc-result-val" id="simVolume" style="color:var(--navy)">—</span></div>
-          <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--muted)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simMes" style="color:var(--green)">—</span></div>
-          <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simAno" style="color:var(--navy)">—</span></div>
-        </div>
-        <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
-        <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Private Label. Os valores reais variam conforme contrato, perfil da carteira e condições de mercado.</p>
       </div>
     </div>
   </section>`;
@@ -2020,6 +2109,9 @@ function renderApp() {
   attachFadeUpObserver();
   initCalculadora();
   initSimuladorReceita();
+  initSimuladorPos();
+  initSimuladorConsignado();
+  initSimuladorTabs();
   document.title = route === "home"
     ? "ES Card — Benefícios Corporativos | Espírito Santo"
     : `${capitalize(route)} | ES Card`;
@@ -2091,6 +2183,132 @@ function initSimuladorReceita() {
   cartoesEl.addEventListener("input", update);
   ticketEl.addEventListener("input", update);
   update();
+}
+
+// ---------- Helpers de renda fixa (idênticos à ferramenta interna) ----------
+function calcIRRegressivo(prazo) {
+  if (prazo <= 180) return 0.225;
+  if (prazo <= 360) return 0.200;
+  if (prazo <= 720) return 0.175;
+  return 0.150;
+}
+const IOF_TABLE_REGRESSIVO = [96,93,90,86,83,80,76,73,70,66,63,60,56,53,50,46,43,40,36,33,30,26,23,20,16,13,10,6,3,0];
+function calcIOFRegressivo(prazo) {
+  const dia = Math.min(Math.max(Math.round(prazo), 1), 30) - 1;
+  return IOF_TABLE_REGRESSIVO[dia] / 100;
+}
+function calcRendaFixa(saldo, cdiAnual, pctCDI, prazo, isento) {
+  const taxaBruta = (cdiAnual / 100) * (pctCDI / 100);
+  const taxaDiaria = Math.pow(1 + taxaBruta, 1 / 252) - 1;
+  const rendBruto = saldo * (Math.pow(1 + taxaDiaria, prazo) - 1);
+  const iof = prazo < 30 ? rendBruto * calcIOFRegressivo(prazo) : 0;
+  const baseIR = rendBruto - iof;
+  const ir = isento ? 0 : baseIR * calcIRRegressivo(prazo);
+  const liquido = rendBruto - iof - ir;
+  return { bruto: rendBruto, iof, ir, liquido };
+}
+
+// ---------- Simulador Private Pós (cartão + float em renda fixa) ----------
+function initSimuladorPos() {
+  const cartoesEl = document.getElementById("simPosCartoes");
+  const ticketEl = document.getElementById("simPosTicket");
+  if (!cartoesEl || !ticketEl) return;
+
+  function update() {
+    const pos = window.ESCARD.DATA_SIMULADOR.pos;
+    const cartoes = +cartoesEl.value || 0;
+    const ticket = +ticketEl.value || 0;
+
+    // Receita do cartão — fórmula idêntica à ferramenta interna (calcPOS)
+    const vgm = cartoes * ticket;
+    const recMDR = vgm * (pos.mdr / 100);
+    const carteiraParc = vgm * (pos.parc / 100) * 3;
+    const recJuro = carteiraParc * (pos.juro / 100);
+    const recAnuidade = cartoes * pos.anuidade;
+    const recProd = vgm * (pos.prod / 100);
+    const recFin = vgm * (pos.fin / 100);
+    const recBruta = recMDR + recJuro + recAnuidade + recProd + recFin;
+
+    const cartInad = vgm * (pos.inad / 100);
+    const recMora = cartInad * (pos.mora / 100);
+    const recMulta = cartInad * (pos.multa / 100);
+    const recEncFin = cartInad * (pos.encfin / 100);
+    const totalEnc = recMora + recMulta + recEncFin;
+    const perdaInad = cartInad * 0.5;
+    const recCardLiq = Math.max(recBruta + totalEnc - perdaInad, 0);
+
+    // Float em renda fixa — compara CDB, LCI/LCA, Tesouro Selic e IPCA+ (97% CDI), usa o melhor
+    const saldoFloat = vgm * (pos.pctFloat / 100) * (pos.dias / 30);
+    const prazoDias = pos.prazoDias || 30;
+    const rfCDB = calcRendaFixa(saldoFloat, pos.cdi, pos.cdbPct, prazoDias, false);
+    const rfLCI = calcRendaFixa(saldoFloat, pos.cdi, pos.lciPct, prazoDias, true);
+    const rfSelic = calcRendaFixa(saldoFloat, pos.cdi, pos.selicPct, prazoDias, false);
+    const rfIPCA = calcRendaFixa(saldoFloat, pos.cdi, 97, prazoDias, false);
+    const opts = [rfCDB, rfLCI, rfSelic, rfIPCA];
+    const recFloat = opts.reduce((max, o) => (o.liquido > max ? o.liquido : max), 0);
+
+    const recTotalLiq = recCardLiq + recFloat;
+
+    document.getElementById("simPosVolume").textContent = fmtBRL(vgm);
+    document.getElementById("simPosCartao").textContent = fmtBRL(recCardLiq);
+    document.getElementById("simPosFloat").textContent = fmtBRL(recFloat);
+    document.getElementById("simPosMes").textContent = fmtBRL(recTotalLiq);
+    document.getElementById("simPosAno").textContent = fmtBRL(recTotalLiq * 12);
+  }
+  cartoesEl.addEventListener("input", update);
+  ticketEl.addEventListener("input", update);
+  update();
+}
+
+// ---------- Simulador Consignado (funcionários × adesão, funding, spread) ----------
+function initSimuladorConsignado() {
+  const funcEl = document.getElementById("simConsFunc");
+  const valorEl = document.getElementById("simConsValor");
+  if (!funcEl || !valorEl) return;
+
+  function update() {
+    const cons = window.ESCARD.DATA_SIMULADOR.cons;
+    const func = +funcEl.value || 0;
+    const valor = +valorEl.value || 0;
+
+    // Fórmula idêntica à ferramenta interna (calcCons)
+    const contratos = Math.round(func * (cons.adesao / 100));
+    const carteira = contratos * valor;
+    const recJuros = carteira * (cons.taxa / 100);
+    const custFund = carteira * (cons.fund / 100);
+
+    const cartInad = carteira * (cons.inad / 100);
+    const recMora = cartInad * (cons.mora / 100);
+    const recMulta = cartInad * (cons.multa / 100);
+    const recEncFin = cartInad * (cons.encfin / 100);
+    const totalEnc = recMora + recMulta + recEncFin;
+    const perdaInad = cartInad * 0.4;
+
+    const recLiq = Math.max(recJuros + totalEnc - custFund - perdaInad, 0);
+
+    document.getElementById("simConsCarteira").textContent = fmtBRL(carteira);
+    document.getElementById("simConsMes").textContent = fmtBRL(recLiq);
+    document.getElementById("simConsAno").textContent = fmtBRL(recLiq * 12);
+  }
+  funcEl.addEventListener("input", update);
+  valorEl.addEventListener("input", update);
+  update();
+}
+
+// ---------- Troca de abas do simulador (PL / Pós / Consignado) ----------
+function initSimuladorTabs() {
+  const tabs = document.querySelectorAll('[data-action="sim-tab"]');
+  if (!tabs.length) return;
+  tabs.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const sim = btn.dataset.sim;
+      tabs.forEach((b) => b.classList.toggle("active", b === btn));
+      ["pl", "pos", "cons"].forEach((key) => {
+        const pane = document.getElementById("simPane-" + key);
+        if (pane) pane.style.display = key === sim ? "" : "none";
+      });
+    });
+  });
 }
 
 function initCalculadora() {
@@ -2290,10 +2508,16 @@ async function loadRemoteContent() {
         content[key].forEach((item) => arrays[key].push(item));
       }
     }
-    // Taxas do simulador (objeto): mescla as taxas salvas no admin
+    // Taxas dos simuladores (objeto): mescla as taxas salvas no admin
     if (content.simulador && typeof content.simulador === "object") {
       if (content.simulador.pl && typeof content.simulador.pl === "object") {
         Object.assign(ES.DATA_SIMULADOR.pl, content.simulador.pl);
+      }
+      if (content.simulador.pos && typeof content.simulador.pos === "object") {
+        Object.assign(ES.DATA_SIMULADOR.pos, content.simulador.pos);
+      }
+      if (content.simulador.cons && typeof content.simulador.cons === "object") {
+        Object.assign(ES.DATA_SIMULADOR.cons, content.simulador.cons);
       }
     }
   } catch (err) {

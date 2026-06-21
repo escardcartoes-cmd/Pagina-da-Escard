@@ -292,13 +292,26 @@ async function loadContent() {
     produtos: c.produtos || [],
     depoimentos: c.depoimentos || [],
     faq: c.faq || [],
-    simulador: Object.assign(
-      {
-        // Private Label — valores-padrão idênticos à ferramenta interna original
-        pl: { mdr: 2.5, parc: 40, juro: 3.0, anuidade: 8, mora: 1.0, multa: 2.0, encfin: 1.5, prod: 2.0, fin: 1.5, inad: 8 },
-      },
-      c.simulador || {}
-    ),
+    simulador: {
+      // Private Label — valores-padrão idênticos à ferramenta interna original
+      pl: Object.assign(
+        { mdr: 2.5, parc: 40, juro: 3.0, anuidade: 8, mora: 1.0, multa: 2.0, encfin: 1.5, prod: 2.0, fin: 1.5, inad: 8 },
+        (c.simulador && c.simulador.pl) || {}
+      ),
+      // Private Pós — valores-padrão idênticos à ferramenta interna original
+      pos: Object.assign(
+        {
+          mdr: 2.5, parc: 40, juro: 3.0, anuidade: 8, mora: 1.0, multa: 2.0, encfin: 1.5, prod: 2.0, fin: 1.5, inad: 8,
+          dias: 5, pctFloat: 70, cdi: 10.5, cdbPct: 100, lciPct: 88, selicPct: 100, prazoDias: 30,
+        },
+        (c.simulador && c.simulador.pos) || {}
+      ),
+      // Consignado — valores-padrão idênticos à ferramenta interna original
+      cons: Object.assign(
+        { adesao: 25, prazo: 24, taxa: 2.2, mora: 1.0, multa: 2.0, encfin: 1.5, fund: 0.95, inad: 1.2 },
+        (c.simulador && c.simulador.cons) || {}
+      ),
+    },
   };
 }
 
@@ -381,24 +394,65 @@ const PL_FIELDS = [
   { key: "inad", label: "% inadimplência sobre carteira", step: "0.5" },
 ];
 
-function renderSimuladorTab() {
-  const pl = content.simulador.pl;
-  const fields = PL_FIELDS.map((f) => `
+// Private Pós = tudo do Private Label + float em renda fixa (CDI/IOF/IR)
+const POS_FIELDS = [
+  { key: "mdr", label: "MDR médio (%)", step: "0.1", hint: "Taxa cobrada ao lojista sobre o volume" },
+  { key: "parc", label: "% carteira parcelada", step: "5" },
+  { key: "juro", label: "Juro parcelamento (% a.m.)", step: "0.1" },
+  { key: "anuidade", label: "Anuidade por cartão (R$/mês)", step: "1" },
+  { key: "mora", label: "Juros de mora (% a.m.)", step: "0.1" },
+  { key: "multa", label: "Multa por atraso (%)", step: "0.1" },
+  { key: "encfin", label: "Encargos financeiros (%)", step: "0.1" },
+  { key: "prod", label: "Produtos adicionais (% do volume)", step: "0.1" },
+  { key: "fin", label: "Produtos financeiros (% do volume)", step: "0.1" },
+  { key: "inad", label: "% inadimplência sobre carteira", step: "0.5" },
+  { key: "dias", label: "Dias médios de float", step: "1" },
+  { key: "pctFloat", label: "% do volume que gera float", step: "5" },
+  { key: "cdi", label: "CDI anual de referência (%)", step: "0.25" },
+  { key: "cdbPct", label: "% CDI — CDB liquidez diária", step: "1" },
+  { key: "lciPct", label: "% CDI — LCI/LCA (isento IR)", step: "1" },
+  { key: "selicPct", label: "% CDI — Tesouro Selic", step: "1" },
+  { key: "prazoDias", label: "Prazo de aplicação (dias)", step: "1" },
+];
+
+// Consignado = lógica própria (funcionários × adesão, funding, spread sobre folha)
+const CONS_FIELDS = [
+  { key: "adesao", label: "% adesão ao crédito", step: "5", hint: "% dos funcionários que contratam o empréstimo" },
+  { key: "prazo", label: "Prazo médio (meses)", step: "6" },
+  { key: "taxa", label: "Taxa cobrada ao mutuário (% a.m.)", step: "0.1" },
+  { key: "mora", label: "Juros de mora (% a.m.)", step: "0.1" },
+  { key: "multa", label: "Multa por atraso (%)", step: "0.1" },
+  { key: "encfin", label: "Encargos financeiros (%)", step: "0.1" },
+  { key: "fund", label: "Custo de funding (% a.m.)", step: "0.05" },
+  { key: "inad", label: "Inadimplência real estimada (%)", step: "0.5" },
+];
+
+function renderSimFieldsCard(sim, title, fields, publicInputsHint) {
+  const data = content.simulador[sim];
+  const fieldsHtml = fields.map((f) => `
     <label class="field">
       <span>${esc(f.label)}</span>
-      <input type="number" step="${f.step}" data-action="field-sim-pl" data-key="${f.key}" value="${esc(pl[f.key])}">
+      <input type="number" step="${f.step}" data-action="field-sim" data-sim="${sim}" data-key="${f.key}" value="${esc(data[f.key])}">
       ${f.hint ? `<small>${esc(f.hint)}</small>` : ""}
     </label>`).join("");
 
   return `
     <div class="card">
-      <p style="margin:0 0 4px;font-weight:700">Private Label — Taxas da operação</p>
+      <p style="margin:0 0 4px;font-weight:700">${title}</p>
       <p style="margin:0 0 20px;color:var(--muted);font-size:13px">
         Estes valores ficam ocultos do público. No site, o visitante informa apenas
-        nº de cartões e ticket médio, e o resultado é calculado com as taxas abaixo.
+        ${publicInputsHint}, e o resultado é calculado com as taxas abaixo.
       </p>
-      <div class="grid-2">${fields}</div>
+      <div class="grid-2">${fieldsHtml}</div>
     </div>`;
+}
+
+function renderSimuladorTab() {
+  return `
+    ${renderSimFieldsCard("pl", "Private Label — Taxas da operação", PL_FIELDS, "nº de cartões e ticket médio")}
+    ${renderSimFieldsCard("pos", "Private Pós — Taxas da operação (cartão + float)", POS_FIELDS, "nº de cartões e ticket médio")}
+    ${renderSimFieldsCard("cons", "Consignado — Taxas da operação", CONS_FIELDS, "nº de funcionários e valor médio do empréstimo")}
+  `;
 }
 
 // ---------- Aba Contato ----------
@@ -608,8 +662,8 @@ document.addEventListener("input", (e) => {
 
   if (action === "field-empresa") {
     content.empresa[t.dataset.key] = t.value;
-  } else if (action === "field-sim-pl") {
-    content.simulador.pl[t.dataset.key] = parseFloat(t.value) || 0;
+  } else if (action === "field-sim") {
+    content.simulador[t.dataset.sim][t.dataset.key] = parseFloat(t.value) || 0;
   } else if (action === "item-field") {
     const section = t.dataset.section;
     const idx = Number(t.dataset.idx);
