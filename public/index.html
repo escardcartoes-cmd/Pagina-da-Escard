@@ -1276,12 +1276,11 @@ function renderLeadBar() {
   return '<div class="lead-bar" id="leadBar">' +
     '<div class="container lead-bar-inner">' +
       '<div class="lead-bar-text">' +
-        '<h3>Calcule agora quanto sua empresa economiza com o PAT</h3>' +
-        '<p>Receba o relatório gratuito de economia fiscal em segundos.</p>' +
+        '<h3>Descubra quanto sua empresa pode economizar com o PAT</h3>' +
+        '<p>Fale agora com um especialista ES Card. Resposta em minutos.</p>' +
       '</div>' +
       '<div class="lead-bar-form">' +
-        '<input type="email" id="leadEmail" placeholder="seu@email.com" autocomplete="email">' +
-        '<button class="btn btn-amber btn-md" id="leadBarBtn">' + ICON("rocket", 16) + ' Receber relatório grátis</button>' +
+        '<button class="btn btn-amber btn-lg" id="leadBarBtn">' + ICON("whatsapp", 18) + ' Falar com especialista agora</button>' +
       '</div>' +
     '</div>' +
   '</div>';
@@ -2219,10 +2218,16 @@ window.ESCARD.renderPageComparativo = function () {
             '<tbody>' + rows + '</tbody>' +
           '</table>' +
         '</div>' +
-        '<p style="font-size:12px;color:var(--gray-400);text-align:center;margin-bottom:48px">' +
-          '✓ Disponível &nbsp;·&nbsp; ◑ Disponível parcialmente &nbsp;·&nbsp; — Não disponível &nbsp;·&nbsp; ' +
-          'Baseado em análise de mercado 2026. As empresas A, B e C são referências genéricas de mercado.' +
+        '<p style="font-size:12px;color:var(--gray-400);text-align:center;margin-bottom:12px">' +
+          '✓ Disponível &nbsp;·&nbsp; ◑ Disponível parcialmente &nbsp;·&nbsp; — Não disponível' +
         '</p>' +
+        '<div style="background:var(--amber-pale);border:1px solid rgba(245,158,11,.25);border-radius:var(--r12);padding:14px 20px;margin-bottom:48px;max-width:760px;margin-left:auto;margin-right:auto">' +
+          '<p style="font-size:12px;color:#92400E;line-height:1.6;margin:0">' +
+            '<strong>Nota sobre os dados:</strong> As empresas A, B e C são referências genéricas de mercado — não representam nenhuma empresa específica identificada pelo nome. ' +
+            'Os critérios refletem análise interna da ES Card com base em informações públicas disponíveis até junho de 2026. ' +
+            'Condições de mercado podem variar. Para comparações específicas, consulte diretamente cada fornecedor.' +
+          '</p>' +
+        '</div>' +
         '<div style="background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:var(--r20);padding:52px;text-align:center">' +
           '<div style="display:flex;justify-content:center;margin-bottom:18px;color:var(--amber)">' + window.ICON("trophy", 44) + '</div>' +
           '<h3 style="font-family:var(--font-display);font-size:24px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:12px">' +
@@ -2588,29 +2593,10 @@ function initSimuladorTabs() {
 
 function initLeadBar() {
   var btn = document.getElementById("leadBarBtn");
-  var input = document.getElementById("leadEmail");
-  if (!btn || !input) return;
+  if (!btn) return;
   btn.addEventListener("click", function() {
-    var email = (input.value || "").trim();
-    if (!email || email.indexOf("@") < 0) {
-      input.style.boxShadow = "0 0 0 3px rgba(239,68,68,.4)";
-      input.focus();
-      setTimeout(function() { input.style.boxShadow = ""; }, 1800);
-      return;
-    }
-    btn.disabled = true;
-    btn.textContent = "Enviando...";
-    fetch(CONFIG.leadsUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tipo: "lead_magnet", email: email, origem: "lead_bar", criado_em: new Date().toISOString() })
-    }).then(function() {
-      var bar = document.getElementById("leadBar");
-      if (bar) bar.innerHTML = '<div class="container" style="text-align:center;padding:18px 0"><span style="color:var(--amber);font-weight:700;font-size:16px">' + ICON("check", 20) + ' Perfeito! Você receberá o relatório em breve.</span></div>';
-    }).catch(function() {
-      btn.disabled = false;
-      btn.textContent = "Receber relatório grátis";
-    });
+    var msg = encodeURIComponent("Olá! Quero saber quanto minha empresa pode economizar com o PAT e os benefícios ES Card.");
+    window.open("https://wa.me/" + window.ESCARD.DATA_EMPRESA.whatsapp + "?text=" + msg, "_blank", "noopener");
   });
 }
 
