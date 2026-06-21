@@ -947,9 +947,9 @@ function navigate(path) {
 function renderNavbar(active) {
   // Itens do dropdown "Soluções" — cada um vai para sua página
   const SOLUCOES = [
-    { ic: "layers", t: "Private Label", s: "Cartão com a marca da sua loja", path: "private-label" },
+    { ic: "layers", t: "Private Label", s: "Label, Pós e Consignado da sua marca", path: "private-label" },
     { ic: "gift", t: "Benefícios Corporativos", s: "VA, VR, multibenefícios e PAT", path: "produtos" },
-    { ic: "coins", t: "Cobrança & Crédito", s: "Consignado, pós e parcelamento", path: "cobranca" },
+    { ic: "coins", t: "Cobrança", s: "Cobrança ativa e recuperação de carteiras", path: "cobranca" },
     { ic: "building", t: "Cartões Corporativos", s: "Frota, despesas e premiação", path: "corporativos" },
     { ic: "heart", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink", path: "bem-estar" },
   ];
@@ -1451,15 +1451,37 @@ window.ESCARD.renderPageProdutos = function () {
   <div class="page-in" style="padding-top:68px">
     <div class="page-hero">
       <div class="container">
-        <h1 class="page-hero-title">Todos os nossos produtos</h1>
-        <p class="page-hero-sub">${DATA_PRODUTOS.length} cartões + Private Label + Bem-estar + Cobrança. Solução completa para qualquer empresa.</p>
+        <h1 class="page-hero-title">Soluções para cada<br><span>necessidade da sua empresa</span></h1>
+        <p class="page-hero-sub">Do cartão de alimentação ao private label, do bem-estar ao controle de frota — tudo em um parceiro.</p>
       </div>
     </div>
+    <section class="section">
+      <div class="container">
+        <div class="cobranca-grid">
+          ${[
+            { ic: "layers", t: "Private Label", d: "Cartão com a marca da sua loja: Label, Pós e Consignado.", path: "private-label" },
+            { ic: "gift", t: "Benefícios Corporativos", d: "VA, VR, multibenefícios e PAT com economia fiscal.", path: "produtos" },
+            { ic: "coins", t: "Cobrança", d: "Cobrança ativa recente e recuperação de carteiras antigas.", path: "cobranca" },
+            { ic: "building", t: "Cartões Corporativos", d: "Frota, despesas, premiação, presente e consignado.", path: "corporativos" },
+            { ic: "heart", t: "Bem-estar & Saúde", d: "Wellhub, Viva+ e Vidalink para cuidar das pessoas.", path: "bem-estar" },
+          ].map(s => `
+            <button class="cobranca-card" data-action="nav" data-path="${s.path}" style="text-align:left;cursor:pointer;border:1px solid var(--gray-200);background:#fff">
+              <div class="cobranca-icon">${ICON(s.ic, 24)}</div>
+              <div style="font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px">${s.t}</div>
+              <p style="font-size:13.5px;line-height:1.6;color:var(--gray-500);margin-bottom:14px">${s.d}</p>
+              <span style="font-size:13px;font-weight:700;color:var(--blue)">Ver soluções →</span>
+            </button>`).join("")}
+        </div>
+      </div>
+    </section>
     <div class="sticky-filter">
       <div class="container filter-row" id="produtosPageFiltro" style="margin-bottom:0">${filterBtns}</div>
     </div>
     <section class="section section-alt">
       <div class="container">
+        <div style="text-align:center;margin-bottom:32px">
+          ${window.ESCARD.SH({ eyebrow: "Cartões de Benefícios", title: "Conheça nossos cartões", sub: "Linha completa de benefícios corporativos." })}
+        </div>
         <div class="produtos-grid" id="produtosPageGrid">${cards}</div>
       </div>
     </section>
@@ -1571,7 +1593,25 @@ window.ESCARD.renderPagePrivateLabel = function () {
       <div class="container">
         <div class="pl-stats-grid">${stats}</div>
         <div class="pl-cards-grid grid-1-on-md">${cards}</div>
-        <div class="pl-cta-block">
+
+        <div style="text-align:center;margin:64px 0 8px">
+          ${window.ESCARD.SH({ eyebrow: "Família Private", title: "Três formatos, uma só marca", sub: "Escolha o modelo que melhor se encaixa na sua operação." })}
+        </div>
+        <div class="cobranca-grid" style="margin-top:32px">
+          ${[
+            { ic: "layers", t: "Private Label", d: "Cartão com a marca da sua loja para fidelizar clientes, aumentar o ticket médio e ter dados reais de consumo.", tags: ["Marca própria", "Fidelização"] },
+            { ic: "coins", t: "Cartão Pós", d: "Modalidade pós-paga: o cliente compra ao longo do mês e paga depois, com fatura única e limite definido pela operação.", tags: ["Pós-pago", "Fatura"] },
+            { ic: "handshake", t: "Cartão Consignado", d: "Crédito com desconto em folha, taxas reduzidas e baixa inadimplência. Mais segurança para a operação e condições justas ao colaborador.", tags: ["Desconto em folha", "Taxas baixas"] },
+          ].map(item => `
+            <div class="cobranca-card">
+              <div class="cobranca-icon">${ICON(item.ic, 24)}</div>
+              <div style="font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px">${item.t}</div>
+              <p style="font-size:13.5px;line-height:1.6;color:var(--gray-500);margin-bottom:14px">${item.d}</p>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">${item.tags.map(t => `<span class="tag" style="background:var(--blue-pale);color:var(--blue)">${t}</span>`).join("")}</div>
+            </div>`).join("")}
+        </div>
+
+        <div class="pl-cta-block" style="margin-top:48px">
           <div style="display:flex;justify-content:center;margin-bottom:18px;color:var(--amber)">${ICON("sparkles", 44)}</div>
           <h3 style="font-family:var(--font-display);font-size:26px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:12px">Hoje, apenas vender não é suficiente</h3>
           <p style="font-size:16px;color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 28px;line-height:1.65">Com o Private Label, sua empresa evolui para um ecossistema financeiro completo — com dados reais, fidelização e mais margem.</p>
@@ -1591,11 +1631,11 @@ window.ESCARD.renderPagePrivateLabel = function () {
 
 window.ESCARD.renderPageCobranca = function () {
   const items = [
-    { ic: "megaphone", t: "Negativação Estratégica", d: "SPC Brasil, Serasa e Boa Vista. Máxima pressão para o devedor fechar o acordo.", tags: ["SPC", "Serasa", "Boa Vista"] },
-    { ic: "handshake", t: "Plataformas de Acordo", d: "Acordo Certo e Conciliação Digital. Auto-atendimento 24h com links de pagamento direto.", tags: ["Acordo Certo", "24h Online"] },
-    { ic: "sparkles", t: "Carteira Legacy", d: "Créditos dados como perdidos há anos recuperados com IA e segmentação avançada.", tags: ["IA", "Big Data"] },
+    { ic: "clock", t: "Cobrança Ativa Recente", d: "Régua automatizada que age nos primeiros dias de atraso — quando a chance de recuperar é maior. Lembretes, acordos e links de pagamento antes da dívida envelhecer.", tags: ["Régua automática", "Primeiros dias"] },
+    { ic: "sparkles", t: "Recuperação de Carteiras Antigas", d: "Créditos dados como perdidos há meses ou anos, recuperados com segmentação inteligente e abordagem certa para cada perfil de devedor.", tags: ["Carteira legada", "Segmentação"] },
+    { ic: "megaphone", t: "Negativação Estratégica", d: "SPC Brasil, Serasa e Boa Vista. Pressão correta para o devedor priorizar o acordo, dentro das regras.", tags: ["SPC", "Serasa", "Boa Vista"] },
     { ic: "message", t: "Abordagem Multicanal", d: "SMS, e-mail, ligação ativa e WhatsApp. Alcançamos o cliente de forma respeitosa e eficiente.", tags: ["SMS", "WhatsApp", "E-mail"] },
-    { ic: "chart", t: "Dashboard Tempo Real", d: "Acompanhe cada etapa da recuperação com total transparência e relatórios detalhados.", tags: ["Live", "Relatórios"] },
+    { ic: "chart", t: "Dashboard em Tempo Real", d: "Acompanhe cada etapa da recuperação com transparência total e relatórios detalhados.", tags: ["Live", "Relatórios"] },
     { ic: "shield", t: "Segurança Jurídica", d: "100% adequado à LGPD e ao Código de Defesa do Consumidor. Total tranquilidade.", tags: ["LGPD", "CDC"] },
   ];
   const cards = items.map(item => `
