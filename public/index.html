@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="ES Card — A plataforma capixaba de benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
+<meta name="description" content="ES Card — A plataforma de soluções em cartões e benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
 <meta name="keywords" content="cartão benefícios ES, benefícios corporativos Espírito Santo, vale alimentação Vitória, multibenefícios ES Card, private label ES">
 <link rel="canonical" href="https://www.escardcartoes.com.br/">
 
@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ES Card">
 <meta property="og:title" content="ES Card — Benefícios Corporativos | Espírito Santo">
-<meta property="og:description" content="A plataforma capixaba de benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
+<meta property="og:description" content="A plataforma de soluções em cartões e benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
 <meta property="og:url" content="https://www.escardcartoes.com.br/">
 <meta property="og:image" content="https://www.escardcartoes.com.br/escard-card-trim.png">
 <meta property="og:locale" content="pt_BR">
@@ -19,7 +19,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ES Card — Benefícios Corporativos | Espírito Santo">
-<meta name="twitter:description" content="A plataforma capixaba de benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
+<meta name="twitter:description" content="A plataforma de soluções em cartões e benefícios corporativos. Cartões de alimentação, multibenefícios, private label, saúde e muito mais. Ative em 24h.">
 <meta name="twitter:image" content="https://www.escardcartoes.com.br/escard-card-trim.png">
 
 <!-- Schema.org -->
@@ -62,13 +62,13 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 // fbq('track', 'PageView');
 </script>
 <!-- Google Analytics GA4 -->
-<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FB8XVB17M2"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX'); // ← substitua pelo ID real do GA4
-</script> -->
+  gtag('config', 'G-FB8XVB17M2');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -1690,11 +1690,9 @@ function renderDiferenciais() {
 }
 
 function renderDepoimentos() {
-  // ⚠️ AVISO PARA ROBERTO (não renderizado no site): os 3 depoimentos em
-  // DATA_DEPOIMENTOS são placeholders fictícios (Carla Mendonça, Rafael
-  // Pimentel, Ana Santos). Substitua por depoimentos reais de clientes
-  // antes de divulgar o site — depoimento fictício atribuído a nome e
-  // empresa é risco de publicidade enganosa (CDC).
+  // Religar quando houver depoimentos REAIS em DATA_DEPOIMENTOS: trocar para true.
+  const MOSTRAR_DEPOIMENTOS = false;
+  if (!MOSTRAR_DEPOIMENTOS) return "";
   const cards = DATA_DEPOIMENTOS.map(d => `
     <div class="depoimento-card">
       <div class="depoimento-quote">"</div>
@@ -1919,7 +1917,6 @@ window.ESCARD.renderPageBemEstar = function () {
         </div>
       </div>
     </div>
-    <p style="text-align:center;font-size:12px;color:var(--gray-400);padding:14px 28px 0;max-width:780px;margin:0 auto">Não tenho fonte verificada para os percentuais acima (GPTW/Gallup citados são referências de mercado, não pesquisa própria da ES Card) — recomendamos confirmar a fonte primária antes de publicar.</p>
     <section class="section"><div class="container">${blocks}</div></section>
   </div>`;
 };
