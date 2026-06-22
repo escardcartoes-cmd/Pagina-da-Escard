@@ -742,6 +742,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .bemestar-block.reverse > :last-child { order: 1; }
 .bemestar-visual { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--r24); padding: 48px; text-align: center; }
  .bemestar-emoji { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+.bemestar-logo { display: flex; align-items: center; justify-content: center; background: #fff; border: 1px solid var(--gray-200); border-radius: 16px; padding: 22px 26px; margin: 0 auto 24px; min-height: 132px; max-width: 300px; }
+.bemestar-logo img { max-width: 100%; max-height: 96px; width: auto; height: auto; object-fit: contain; display: block; }
 .bemestar-nome { font-family: var(--font-display); font-size: 32px; font-weight: 900; color: var(--navy); margin-bottom: 6px; }
 .bemestar-stat { font-family: var(--font-display); font-size: 52px; font-weight: 900; letter-spacing: -2px; margin-bottom: 4px; }
 .bemestar-stat-label { font-size: 13px; color: var(--gray-400); }
@@ -999,9 +1001,9 @@ const DATA_BLOG = [
 ];
 
 const DATA_BEMESTAR = [
-  { emoji: "dumbbell", nome: "Wellhub",  cor: "#7C3AED", tag: "Academias & Bem-estar", desc: "Plataforma completa: academias, mindfulness, terapia, nutrição e sono — tudo integrado.", features: ["Academias premium em todo o Brasil", "Mindfulness, terapia, suporte psicológico", "Plano gratuito para todos os colaboradores", "30-60% mais barato que academia tradicional"], stat: "2-3x", statL: "mais propensos a permanecer (GPTW)" },
-  { emoji: "pill", nome: "Vidalink", cor: "#0284C7", tag: "Farmácias & Saúde", desc: "Gestão inteligente de medicamentos com desconto e programa de saúde preventiva.", features: ["Farmácias credenciadas com descontos", "Gestão de medicamentos contínuos", "Saúde preventiva e controle de gastos", "App com histórico completo"], stat: "-41%", statL: "de absenteísmo com saúde (Gallup)" },
-  { emoji: "heart", nome: "Viva+",    cor: "#10B981", tag: "Saúde Digital", desc: "Scanner de saúde por selfie, telemedicina, IA emocional 24/7 e academia digital.", features: ["Scanner de saúde por selfie — 97% acurácia", "15 teleorientações + 5 teleconsultas/mês", "IA emocional 24/7 por WhatsApp (NR-1)", "Academia digital com 600+ aulas"], stat: "+180k", statL: "vidas impactadas pela plataforma" },
+  { emoji: "dumbbell", nome: "Wellhub",  logo: "/logo-wellhub.png", cor: "#7C3AED", tag: "Academias & Bem-estar", desc: "Plataforma completa: academias, mindfulness, terapia, nutrição e sono — tudo integrado.", features: ["Academias premium em todo o Brasil", "Mindfulness, terapia, suporte psicológico", "Plano gratuito para todos os colaboradores", "30-60% mais barato que academia tradicional"], stat: "2-3x", statL: "mais propensos a permanecer (GPTW)" },
+  { emoji: "pill", nome: "Vidalink", logo: "/logo-vidalink.png", cor: "#0284C7", tag: "Farmácias & Saúde", desc: "Gestão inteligente de medicamentos com desconto e programa de saúde preventiva.", features: ["Farmácias credenciadas com descontos", "Gestão de medicamentos contínuos", "Saúde preventiva e controle de gastos", "App com histórico completo"], stat: "-41%", statL: "de absenteísmo com saúde (Gallup)" },
+  { emoji: "heart", nome: "Viva+",    logo: "/logo-vivamais.png", cor: "#10B981", tag: "Saúde Digital", desc: "Scanner de saúde por selfie, telemedicina, IA emocional 24/7 e academia digital.", features: ["Scanner de saúde por selfie — 97% acurácia", "15 teleorientações + 5 teleconsultas/mês", "IA emocional 24/7 por WhatsApp (NR-1)", "Academia digital com 600+ aulas"], stat: "+180k", statL: "vidas impactadas pela plataforma" },
 ];
 
 // Taxas dos simuladores de rentabilidade. Ocultas do público,
@@ -1326,7 +1328,7 @@ function renderHero() {
             <span class="hero-badge-text">${ICON("trophy", 14)} Soluções corporativas</span>
           </div>
           <h1 class="hero-title"><span class="hero-line">Soluções que impulsionam empresas.</span> <span class="text-gradient hero-line">Benefícios que valorizam pessoas.</span></h1>
-          <p class="hero-sub">A ES Card conecta empresas capixabas a <strong style="color:var(--navy);font-weight:700">soluções completas em cartões de benefícios</strong>, saúde e private label — com suporte humano local e ativação em 24h.</p>
+          <p class="hero-sub">A ES Card conecta todos os tipos de empresas às <strong style="color:var(--navy);font-weight:700">soluções completas de cartões de benefícios</strong>, saúde e private label, com suporte humano local e ativação em 24h.</p>
           <div class="hero-cta-row">
             <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Quero uma Demonstração</button>
           </div>
@@ -1877,8 +1879,10 @@ function renderBlock(p, i) {
   <div class="bemestar-block grid-1-on-md${i % 2 !== 0 ? " reverse" : ""}">
     <div>
       <div class="bemestar-visual">
-              <div class="bemestar-emoji" style="color:${p.cor}">${ICON(p.emoji, 40)}</div>
-        <div class="bemestar-nome">${esc(p.nome)}</div>
+        ${p.logo
+          ? `<div class="bemestar-logo"><img src="${p.logo}" alt="${esc(p.nome)}" loading="lazy"/></div>`
+          : `<div class="bemestar-emoji" style="color:${p.cor}">${ICON(p.emoji, 40)}</div>
+        <div class="bemestar-nome">${esc(p.nome)}</div>`}
         <div class="bemestar-stat" style="color:${p.cor}">${esc(p.stat)}</div>
         <div class="bemestar-stat-label">${esc(p.statL)}</div>
       </div>
