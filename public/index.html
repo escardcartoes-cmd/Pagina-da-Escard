@@ -952,7 +952,6 @@ const DATA_STATS = [
   { n: "500", suf: "+", label: "Empresas atendidas" },
   { n: "10k", suf: "+", label: "Colaboradores beneficiados" },
   { n: "24", suf: "h", label: "Ativação do cartão" },
-  { n: "100", suf: "%", label: "Capixaba de coração" },
 ];
 
 const DATA_LOGOS = ["Parceiro A", "Parceiro B", "Parceiro C", "Parceiro D", "Parceiro E", "Parceiro F"];
@@ -1328,7 +1327,7 @@ function renderHero() {
             <span class="hero-badge-text">${ICON("trophy", 14)} Soluções corporativas</span>
           </div>
           <h1 class="hero-title"><span class="hero-line">Soluções que impulsionam empresas.</span> <span class="text-gradient hero-line">Benefícios que valorizam pessoas.</span></h1>
-          <p class="hero-sub">A ES Card conecta todos os tipos de empresas às <strong style="color:var(--navy);font-weight:700">soluções completas de cartões de benefícios</strong>, saúde e private label, com suporte humano local e ativação em 24h.</p>
+          <p class="hero-sub">A ES Card conecta todos os tipos de empresas às <strong style="color:var(--navy);font-weight:700">soluções completas de cartões de benefícios</strong>, <strong style="color:var(--navy);font-weight:700">saúde</strong> e <strong style="color:var(--navy);font-weight:700">private label</strong>, com suporte humano local e ativação em 24h.</p>
           <div class="hero-cta-row">
             <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Quero uma Demonstração</button>
           </div>
@@ -1649,7 +1648,7 @@ function renderComparePreview() {
       '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:820px;margin:0 auto 36px">' +
         [
           ["zap", "Ativação 5x mais rápida", "24h vs. semanas dos grandes."],
-          ["home", "Único com suporte presencial ES", "Especialista local, não call center.<br><span style=\"display:inline-block;margin-top:8px;font-size:11px;font-style:italic;color:var(--gray-400)\">*somente no estado do ES</span>"],
+          ["home", "Único com suporte presencial", "Especialista local, não call center.<br><span style=\"display:inline-block;margin-top:8px;font-size:11px;font-style:italic;color:var(--gray-400)\">*somente no estado do ES</span>"],
           ["coins", "Zero taxa de emissão", "Você paga só pelos benefícios."]
         ].map(function(item) {
           return '<div style="background:white;border:1px solid var(--gray-200);border-radius:var(--r16);padding:28px;box-shadow:var(--shadow-sm)">' +
