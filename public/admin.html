@@ -493,7 +493,7 @@ function newItem(section) {
   if (section === "produtos") return { nome: "Novo cartão", desc: "", emoji: "💳", cor: "#1B4FD8", tags: [] };
   if (section === "depoimentos") return { nome: "", cargo: "", empresa: "", inicial: "?", cor: "#1B4FD8", texto: "" };
   if (section === "faq") return { q: "", r: "" };
-  if (section === "blog") return { titulo: "", resumo: "", cat: "Novidades", catCor: "#1B4FD8", data: new Date().toLocaleDateString("pt-BR", {day:"2-digit",month:"short",year:"numeric"}).replace(/\./g,""), tempo: "3 min", emoji: "sparkles", bg: "linear-gradient(135deg,#1B4FD8,#0F2860)", destaque: false };
+  if (section === "blog") return { titulo: "", resumo: "", cat: "Novidades", catCor: "#1B4FD8", data: new Date().toLocaleDateString("pt-BR", {day:"2-digit",month:"short",year:"numeric"}).replace(/\./g,""), tempo: "3 min", emoji: "sparkles", bg: "linear-gradient(135deg,#1B4FD8,#0F2860)", img: "", destaque: false };
   return {};
 }
 
@@ -557,6 +557,7 @@ function renderItemBody(section, item, idx) {
       <div class="grid-2">
         <label class="field span-2"><span>Título do post *</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="titulo" value="${esc(item.titulo)}" placeholder="Ex: Como o Wellhub reduz turnover"></label>
         <label class="field span-2"><span>Resumo (aparece no card)</span><textarea rows="3" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="resumo">${esc(item.resumo)}</textarea></label>
+        <label class="field span-2"><span>Imagem de capa (URL) — opcional</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="img" value="${esc(item.img || "")}" placeholder="Ex: /blog/decreto-pat.jpg (deixe vazio para usar o ícone colorido)"></label>
         <label class="field"><span>Categoria</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="cat" value="${esc(item.cat)}" placeholder="Ex: Legislação, RH Estratégico"></label>
         <label class="field"><span>Cor da categoria (hex)</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="catCor" value="${esc(item.catCor)}" placeholder="#1B4FD8"></label>
         <label class="field"><span>Data de publicação</span><input type="text" data-action="item-field" data-section="${section}" data-idx="${idx}" data-key="data" value="${esc(item.data)}" placeholder="Ex: 12 Jun 2026"></label>

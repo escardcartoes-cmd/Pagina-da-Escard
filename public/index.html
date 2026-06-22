@@ -598,7 +598,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .blog-grid-full { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
 .blog-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--r20); overflow: hidden; cursor: pointer; box-shadow: var(--shadow-sm); transition: all .22s ease; }
 .blog-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
-.blog-thumb { display: flex; align-items: center; justify-content: center; }
+.blog-thumb { display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .blog-content { padding: 20px; }
 .blog-cat { display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 3px 10px; border-radius: var(--r-full); margin-bottom: 10px; }
 .blog-title { font-family: var(--font-display); font-weight: 800; color: var(--navy); line-height: 1.3; margin-bottom: 8px; letter-spacing: -0.3px; }
@@ -965,10 +965,13 @@ const DATA_FAQ = [
   { q: "Como funciona a cobrança de carteira em atraso?", r: "Atuamos tanto na cobrança ativa recente (carteira recém-vencida) quanto na recuperação de portfólio legado, com régua de contato e negociação conduzida pela nossa equipe." },
 ];
 
+// Para usar uma imagem de capa em vez do gradiente+ícone, preencha o campo
+// "img" do post com o caminho do arquivo (ex.: img: "/blog/decreto-pat.jpg").
+// Deixe "" (vazio) para manter o gradiente colorido com ícone.
 const DATA_BLOG = [
-  { id: 1, cat: "Legislação",    catCor: "#1B4FD8", emoji: "clipboard", bg: "linear-gradient(135deg,#1B4FD8,#0F2860)", titulo: "Decreto 12.712/2025: o que muda no PAT para empresas capixabas", data: "12 Jun 2026", tempo: "8 min", resumo: "Novas regras do PAT entram em vigor. Veja o impacto para o RH da sua empresa no ES.", destaque: true },
-  { id: 2, cat: "RH Estratégico", catCor: "#7C3AED", emoji: "sparkles", bg: "linear-gradient(135deg,#7C3AED,#5B21B6)", titulo: "Como o Wellhub reduz turnover — dados reais de 2025", data: "5 Jun 2026", tempo: "5 min", resumo: "41% menos absenteísmo e 2,7x mais retenção. Os números são conclusivos." },
-  { id: 3, cat: "Saúde",         catCor: "#10B981", emoji: "pill", bg: "linear-gradient(135deg,#059669,#047857)", titulo: "Telemedicina no benefício: por que o Viva+ está mudando o jogo", data: "28 Mai 2026", tempo: "4 min", resumo: "NR-1 em vigor e burnout em alta — como a telemedicina evita afastamentos custosos." },
+  { id: 1, cat: "Legislação",    catCor: "#1B4FD8", emoji: "clipboard", bg: "linear-gradient(135deg,#1B4FD8,#0F2860)", img: "", titulo: "Decreto 12.712/2025: o que muda no PAT para empresas capixabas", data: "12 Jun 2026", tempo: "8 min", resumo: "Novas regras do PAT entram em vigor. Veja o impacto para o RH da sua empresa no ES.", destaque: true },
+  { id: 2, cat: "RH Estratégico", catCor: "#7C3AED", emoji: "sparkles", bg: "linear-gradient(135deg,#7C3AED,#5B21B6)", img: "", titulo: "Como o Wellhub reduz turnover — dados reais de 2025", data: "5 Jun 2026", tempo: "5 min", resumo: "41% menos absenteísmo e 2,7x mais retenção. Os números são conclusivos." },
+  { id: 3, cat: "Saúde",         catCor: "#10B981", emoji: "pill", bg: "linear-gradient(135deg,#059669,#047857)", img: "", titulo: "Telemedicina no benefício: por que o Viva+ está mudando o jogo", data: "28 Mai 2026", tempo: "4 min", resumo: "NR-1 em vigor e burnout em alta — como a telemedicina evita afastamentos custosos." },
 ];
 
 const DATA_BEMESTAR = [
@@ -1269,6 +1272,22 @@ window.ESCARD = Object.assign(window.ESCARD, {
 (function () {
 "use strict";
 const { DATA_EMPRESA, DATA_STATS, DATA_LOGOS, DATA_PRODUTOS, DATA_DEPOIMENTOS, DATA_FAQ, DATA_BLOG, esc, waLink, SH } = window.ESCARD;
+
+// Monta o thumb do card de blog. Se o post tem "img", usa imagem de capa
+// (object-fit:cover). Senão, mantém o gradiente colorido com o ícone.
+// ratio: aspect-ratio CSS ("16/10"); icon: tamanho do ícone; extra: estilo adicional.
+function blogThumb(p, ratio, icon, extra) {
+  extra = extra || "";
+  var ar = ratio ? "aspect-ratio:" + ratio + ";" : "";
+  if (p.img) {
+    return '<div class="blog-thumb" style="' + ar + extra + '">'
+      + '<img src="' + esc(p.img) + '" alt="' + esc(p.titulo) + '" loading="lazy" '
+      + 'style="width:100%;height:100%;object-fit:cover;display:block"></div>';
+  }
+  return '<div class="blog-thumb" style="background:' + p.bg + ';' + ar
+    + 'color:rgba(255,255,255,.92);' + extra + '">' + window.ICON(p.emoji, icon) + '</div>';
+}
+window.ESCARD.blogThumb = blogThumb;
 
 function renderHero() {
   return `
@@ -1670,7 +1689,7 @@ function renderDepoimentos() {
 function renderBlogPreview() {
   const cards = DATA_BLOG.map((p, i) => `
     <div class="blog-card" data-action="nav" data-path="blog">
-      <div class="blog-thumb" style="background:${p.bg};aspect-ratio:${i === 0 ? "16/7" : "16/10"};color:rgba(255,255,255,.92)">${ICON(p.emoji, i === 0 ? 64 : 44)}</div>
+      ${blogThumb(p, i === 0 ? "16/7" : "16/10", i === 0 ? 64 : 44)}
       <div class="blog-content" style="padding:${i === 0 ? "26px" : "20px"}">
         <span class="blog-cat" style="background:${p.catCor}1f;color:${p.catCor}">${esc(p.cat)}</span>
         <div class="blog-title" style="font-size:${i === 0 ? "19px" : "15px"}">${esc(p.titulo)}</div>
@@ -2112,7 +2131,7 @@ window.ESCARD.renderPageBlog = function () {
   const resto = DATA_BLOG.slice(1);
   const restoCards = resto.map(p => `
     <div class="blog-card">
-      <div class="blog-thumb" style="background:${p.bg};aspect-ratio:16/10;color:rgba(255,255,255,.92)">${ICON(p.emoji, 44)}</div>
+      ${window.ESCARD.blogThumb(p, "16/10", 44)}
       <div class="blog-content">
         <span class="blog-cat" style="background:${p.catCor}1f;color:${p.catCor}">${esc(p.cat)}</span>
         <div class="blog-title" style="font-size:16px">${esc(p.titulo)}</div>
@@ -2132,7 +2151,7 @@ window.ESCARD.renderPageBlog = function () {
     <section class="section section-alt">
       <div class="container">
         <div class="blog-card" style="margin-bottom:32px;display:grid;grid-template-columns:1fr 1fr" data-grid-mobile>
-          <div class="blog-thumb" style="background:${destaque.bg};min-height:280px;color:rgba(255,255,255,.92)">${ICON(destaque.emoji, 80)}</div>
+          ${window.ESCARD.blogThumb(destaque, "", 80, "min-height:280px")}
           <div style="padding:40px;display:flex;flex-direction:column;justify-content:center">
             <span class="blog-cat" style="background:${destaque.catCor}1f;color:${destaque.catCor};width:fit-content">${esc(destaque.cat)}</span>
             <h2 style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--navy);line-height:1.3;margin-bottom:12px;letter-spacing:-0.5px">${esc(destaque.titulo)}</h2>
