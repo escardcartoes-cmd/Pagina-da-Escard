@@ -2915,16 +2915,23 @@ async function loadRemoteContent() {
       }
     }
     // Taxas dos simuladores (objeto): mescla as taxas salvas no admin
+    // Merge seguro: aceita números finitos >= 0 (zero é válido e intencional,
+    // ex.: adesão 0 para demonstrar cenários). Ignora apenas valores vazios,
+    // nulos ou não-numéricos, que entrariam por erro e quebrariam o cálculo.
     if (content.simulador && typeof content.simulador === "object") {
-      if (content.simulador.pl && typeof content.simulador.pl === "object") {
-        Object.assign(ES.DATA_SIMULADOR.pl, content.simulador.pl);
-      }
-      if (content.simulador.pos && typeof content.simulador.pos === "object") {
-        Object.assign(ES.DATA_SIMULADOR.pos, content.simulador.pos);
-      }
-      if (content.simulador.cons && typeof content.simulador.cons === "object") {
-        Object.assign(ES.DATA_SIMULADOR.cons, content.simulador.cons);
-      }
+      const mergeTaxas = (destino, origem) => {
+        if (!origem || typeof origem !== "object") return;
+        for (const k in origem) {
+          const bruto = origem[k];
+          // rejeita vazio/nulo/indefinido antes de converter (Number("") === 0)
+          if (bruto === "" || bruto === null || bruto === undefined) continue;
+          const v = Number(bruto);
+          if (Number.isFinite(v) && v >= 0) destino[k] = v;
+        }
+      };
+      mergeTaxas(ES.DATA_SIMULADOR.pl, content.simulador.pl);
+      mergeTaxas(ES.DATA_SIMULADOR.pos, content.simulador.pos);
+      mergeTaxas(ES.DATA_SIMULADOR.cons, content.simulador.cons);
     }
   } catch (err) {
     // Em caso de falha, o site usa o conteúdo padrão embutido
