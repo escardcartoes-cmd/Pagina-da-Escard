@@ -2667,7 +2667,12 @@ function initSimuladorConsignado() {
     const valor = +valorEl.value || 0;
 
     // Fórmula idêntica à ferramenta interna (calcCons)
-    const contratos = Math.round(func * (cons.adesao / 100));
+    // Fator de adesão: se a adesão for 0 (ou não definida), a calculadora
+    // assume o potencial total da folha (100% elegíveis), de modo que as
+    // demais taxas (juros, fund, encargos, inadimplência) sempre incidam
+    // sobre uma carteira real. Qualquer adesão > 0 ajusta proporcionalmente.
+    const fatorAdesao = cons.adesao > 0 ? (cons.adesao / 100) : 1;
+    const contratos = Math.round(func * fatorAdesao);
     const carteira = contratos * valor;
     const recJuros = carteira * (cons.taxa / 100);
     const custFund = carteira * (cons.fund / 100);
