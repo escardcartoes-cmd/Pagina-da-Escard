@@ -2217,8 +2217,8 @@ window.ESCARD.renderPageQuemSomos = function () {
       <p style="font-size:14.5px;line-height:1.7;color:var(--gray-500)">${item.d}</p>
     </div>`).join("");
 
-  const stats = [["500+", "Empresas"], ["10k+", "Colaboradores"], ["24h", "Ativação"], ["100%", "Local"]]
-    .map(([n, l]) => `<div class="quemsomos-stat-box"><div style="font-family:var(--font-display);font-size:34px;font-weight:900;color:var(--amber);letter-spacing:-1px;margin-bottom:4px">${n}</div><div style="font-size:13px;color:rgba(255,255,255,.45)">${l}</div></div>`).join("");
+  const stats = [["1000+", "Empresas"], ["15k+", "Colaboradores"], ["24h", "Ativação"], ["Premium", "Atendimento"]]
+    .map(([n, l]) => `<div class="quemsomos-stat-box"><div style="font-family:var(--font-display);font-size:34px;font-weight:900;color:var(--amber);letter-spacing:-1px;margin-bottom:4px;word-break:break-word">${n}</div><div style="font-size:13px;color:rgba(255,255,255,.45)">${l}</div></div>`).join("");
 
   const contatos = [[DATA_EMPRESA.telefone, "phone", "WhatsApp"], [DATA_EMPRESA.email, "mail", "E-mail"], [DATA_EMPRESA.horario, "clock", "Horário"], [DATA_EMPRESA.endereco, "pin", "Endereço"]]
     .map(([v, ic, l]) => `
