@@ -2896,7 +2896,14 @@ document.addEventListener("submit", (e) => {
 // ---------- Carrega conteúdo editável do banco antes de renderizar ----------
 async function loadRemoteContent() {
   try {
-    const res = await fetch("/api/content", { cache: "no-store" });
+    // Timeout garantido: se /api/content não responder em 4s, desiste e
+    // segue com o conteúdo padrão. Promise.race funciona em qualquer browser
+    // mesmo sem suporte a AbortController.
+    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 4000));
+    const res = await Promise.race([
+      fetch("/api/content", { cache: "no-store" }),
+      timeout
+    ]);
     if (!res.ok) return;
     const payload = await res.json();
     const content = (payload && payload.content) || {};
@@ -2946,10 +2953,10 @@ async function loadRemoteContent() {
 
 window.addEventListener("hashchange", renderApp);
 window.addEventListener("DOMContentLoaded", function () {
-  loadRemoteContent().then(renderApp);
+  loadRemoteContent().catch(function(){}).finally(renderApp);
 });
 if (document.readyState !== "loading") {
-  loadRemoteContent().then(renderApp);
+  loadRemoteContent().catch(function(){}).finally(renderApp);
 }
 
 })();
