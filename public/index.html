@@ -1665,7 +1665,7 @@ function renderComparePreview() {
 
 function renderDiferenciais() {
   const items = [
-    { ic: "home", t: "Especialistas no mercado", d: "Conhecemos o mercado como ninguém — e você fala com uma pessoa real, não um chatbot.", dark: true, badge: "Exclusivo ES Card" },
+    { ic: "home", t: "Somos daqui", d: "100% capixaba. Conhecemos o mercado do ES como ninguém — e você fala com uma pessoa real, não um chatbot.", dark: true, badge: "Exclusivo ES Card" },
     { ic: "zap", t: "Ativação em 24h", d: "Enquanto os grandes levam semanas, a ES Card ativa seus cartões em até 24h após a contratação." },
     { ic: "coins", t: "Taxa zero", d: "Sem custo de emissão ou manutenção. Você paga apenas pelos benefícios que oferece aos colaboradores." },
     { ic: "handshake", t: "Atendimento humano", d: "Um especialista dedicado para sua conta — por WhatsApp, telefone ou visita presencial em Vitória." },
@@ -1730,7 +1730,7 @@ function renderBlogPreview() {
   <section class="section section-white">
     <div class="container">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px">
-        <div class="sh left" style="margin-bottom:0"><div class="sh-eyebrow"><span class="sh-eyebrow-dash"></span>Blog</div><h2 class="sh-title">Conteúdo estratégico<br>para o RH capixaba</h2></div>
+        <div class="sh left" style="margin-bottom:0"><div class="sh-eyebrow"><span class="sh-eyebrow-dash"></span>Blog</div><h2 class="sh-title">Conteúdo estratégico<br>para sua Empresa</h2></div>
         <button class="btn btn-outline" data-action="nav" data-path="blog">Ver todos os artigos →</button>
       </div>
       <div class="blog-grid">${cards}</div>
@@ -2116,8 +2116,8 @@ window.ESCARD.renderPageLojistas = function () {
     <div style="background:linear-gradient(135deg,var(--amber-dark),#92400E);padding:72px 0 56px;text-align:center">
       <div class="container">
         <div style="display:flex;justify-content:center;margin-bottom:14px;color:white">${ICON("store", 56)}</div>
-        <h1 class="page-hero-title">Credencie seu estabelecimento na ES Card</h1>
-        <p class="page-hero-sub" style="color:rgba(255,255,255,.75)">Receba clientes com saldo ES Card, aumente suas vendas e faça parte de uma rede que gera novas oportunidades de negócio.</p>
+        <h1 class="page-hero-title">Aceite ES Card no seu estabelecimento</h1>
+        <p class="page-hero-sub" style="color:rgba(255,255,255,.75)">Seus clientes têm saldo ES Card. Credenciado, você os recebe e atrai novos clientes da nossa rede.</p>
       </div>
     </div>
     <section class="section">
@@ -2175,7 +2175,7 @@ window.ESCARD.renderPageBlog = function () {
     <div class="page-hero">
       <div class="container">
         <h1 class="page-hero-title">Blog ES Card</h1>
-        <p class="page-hero-sub">Legislação, RH, bem-estar e benchmarks para empresas.</p>
+        <p class="page-hero-sub">Legislação, RH, bem-estar e benchmarks para empresas capixabas.</p>
       </div>
     </div>
     <section class="section section-alt">
@@ -2217,8 +2217,8 @@ window.ESCARD.renderPageQuemSomos = function () {
       <p style="font-size:14.5px;line-height:1.7;color:var(--gray-500)">${item.d}</p>
     </div>`).join("");
 
-  const stats = [["1000+", "Empresas"], ["15k+", "Colaboradores"], ["24h", "Ativação"], ["Premium", "Atendimento"]]
-    .map(([n, l]) => `<div class="quemsomos-stat-box"><div style="font-family:var(--font-display);font-size:34px;font-weight:900;color:var(--amber);letter-spacing:-1px;margin-bottom:4px;word-break:break-word">${n}</div><div style="font-size:13px;color:rgba(255,255,255,.45)">${l}</div></div>`).join("");
+  const stats = [["500+", "Empresas"], ["10k+", "Colaboradores"], ["24h", "Ativação"], ["100%", "Local"]]
+    .map(([n, l]) => `<div class="quemsomos-stat-box"><div style="font-family:var(--font-display);font-size:34px;font-weight:900;color:var(--amber);letter-spacing:-1px;margin-bottom:4px">${n}</div><div style="font-size:13px;color:rgba(255,255,255,.45)">${l}</div></div>`).join("");
 
   const contatos = [[DATA_EMPRESA.telefone, "phone", "WhatsApp"], [DATA_EMPRESA.email, "mail", "E-mail"], [DATA_EMPRESA.horario, "clock", "Horário"], [DATA_EMPRESA.endereco, "pin", "Endereço"]]
     .map(([v, ic, l]) => `
@@ -2232,8 +2232,8 @@ window.ESCARD.renderPageQuemSomos = function () {
     <div style="background:var(--navy);padding:72px 0 56px">
       <div class="container hero-grid grid-1">
         <div>
-          <h1 class="page-hero-title" style="text-align:left;font-size:clamp(32px,4vw,48px)">Soluções globais,<br>atendimento que é só seu</h1>
-          <p style="font-size:16px;line-height:1.7;color:rgba(255,255,255,.6)">A ES Card reúne tecnologia, inovação e atendimento consultivo para oferecer soluções completas em benefícios corporativos e meios de pagamento. Tudo pensado para atender cada cliente de forma personalizada, com agilidade, proximidade e excelência.</p>
+          <h1 class="page-hero-title" style="text-align:left;font-size:clamp(32px,4vw,48px)">100% capixaba,<br>feita para o ES</h1>
+          <p style="font-size:16px;line-height:1.7;color:rgba(255,255,255,.6)">A ES Card nasceu em Vitória com uma missão clara: oferecer benefícios corporativos completos com o atendimento humano que o mercado local merece.</p>
         </div>
         <div class="quemsomos-stats-grid">${stats}</div>
       </div>
@@ -2346,13 +2346,12 @@ window.ESCARD.renderPageComparativo = function () {
         '<div style="background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:var(--r20);padding:52px;text-align:center">' +
           '<div style="display:flex;justify-content:center;margin-bottom:18px;color:var(--amber)">' + window.ICON("trophy", 44) + '</div>' +
           '<h3 style="font-family:var(--font-display);font-size:24px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:12px">' +
-            'Só a ES Card entrega tudo isso com suporte presencial*' +
+            'Só a ES Card entrega tudo isso com suporte capixaba presencial' +
           '</h3>' +
           '<p style="font-size:15px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 28px;line-height:1.65">' +
             'Não abrimos mão de atendimento humano real. Você tem um especialista dedicado — não um número de chamado.' +
           '</p>' +
           '<button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">' + window.ICON("rocket", 18) + ' Quero uma proposta personalizada</button>' +
-          '<p style="font-size:12px;color:rgba(255,255,255,.4);margin-top:18px">*válido para o Espírito Santo</p>' +
         '</div>' +
       '</div>' +
     '</section>' +
@@ -2667,12 +2666,7 @@ function initSimuladorConsignado() {
     const valor = +valorEl.value || 0;
 
     // Fórmula idêntica à ferramenta interna (calcCons)
-    // Fator de adesão: se a adesão for 0 (ou não definida), a calculadora
-    // assume o potencial total da folha (100% elegíveis), de modo que as
-    // demais taxas (juros, fund, encargos, inadimplência) sempre incidam
-    // sobre uma carteira real. Qualquer adesão > 0 ajusta proporcionalmente.
-    const fatorAdesao = cons.adesao > 0 ? (cons.adesao / 100) : 1;
-    const contratos = Math.round(func * fatorAdesao);
+    const contratos = Math.round(func * (cons.adesao / 100));
     const carteira = contratos * valor;
     const recJuros = carteira * (cons.taxa / 100);
     const custFund = carteira * (cons.fund / 100);
@@ -2896,14 +2890,7 @@ document.addEventListener("submit", (e) => {
 // ---------- Carrega conteúdo editável do banco antes de renderizar ----------
 async function loadRemoteContent() {
   try {
-    // Timeout garantido: se /api/content não responder em 4s, desiste e
-    // segue com o conteúdo padrão. Promise.race funciona em qualquer browser
-    // mesmo sem suporte a AbortController.
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 4000));
-    const res = await Promise.race([
-      fetch("/api/content", { cache: "no-store" }),
-      timeout
-    ]);
+    const res = await fetch("/api/content", { cache: "no-store" });
     if (!res.ok) return;
     const payload = await res.json();
     const content = (payload && payload.content) || {};
@@ -2927,23 +2914,16 @@ async function loadRemoteContent() {
       }
     }
     // Taxas dos simuladores (objeto): mescla as taxas salvas no admin
-    // Merge seguro: aceita números finitos >= 0 (zero é válido e intencional,
-    // ex.: adesão 0 para demonstrar cenários). Ignora apenas valores vazios,
-    // nulos ou não-numéricos, que entrariam por erro e quebrariam o cálculo.
     if (content.simulador && typeof content.simulador === "object") {
-      const mergeTaxas = (destino, origem) => {
-        if (!origem || typeof origem !== "object") return;
-        for (const k in origem) {
-          const bruto = origem[k];
-          // rejeita vazio/nulo/indefinido antes de converter (Number("") === 0)
-          if (bruto === "" || bruto === null || bruto === undefined) continue;
-          const v = Number(bruto);
-          if (Number.isFinite(v) && v >= 0) destino[k] = v;
-        }
-      };
-      mergeTaxas(ES.DATA_SIMULADOR.pl, content.simulador.pl);
-      mergeTaxas(ES.DATA_SIMULADOR.pos, content.simulador.pos);
-      mergeTaxas(ES.DATA_SIMULADOR.cons, content.simulador.cons);
+      if (content.simulador.pl && typeof content.simulador.pl === "object") {
+        Object.assign(ES.DATA_SIMULADOR.pl, content.simulador.pl);
+      }
+      if (content.simulador.pos && typeof content.simulador.pos === "object") {
+        Object.assign(ES.DATA_SIMULADOR.pos, content.simulador.pos);
+      }
+      if (content.simulador.cons && typeof content.simulador.cons === "object") {
+        Object.assign(ES.DATA_SIMULADOR.cons, content.simulador.cons);
+      }
     }
   } catch (err) {
     // Em caso de falha, o site usa o conteúdo padrão embutido
@@ -2953,10 +2933,10 @@ async function loadRemoteContent() {
 
 window.addEventListener("hashchange", renderApp);
 window.addEventListener("DOMContentLoaded", function () {
-  loadRemoteContent().catch(function(){}).finally(renderApp);
+  loadRemoteContent().then(renderApp);
 });
 if (document.readyState !== "loading") {
-  loadRemoteContent().catch(function(){}).finally(renderApp);
+  loadRemoteContent().then(renderApp);
 }
 
 })();
