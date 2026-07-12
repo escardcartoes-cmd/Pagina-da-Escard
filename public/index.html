@@ -2509,6 +2509,12 @@ function renderApp() {
     contato: "Solicitar Proposta Gratuita | ES Card",
   };
   document.title = titles[route] || "ES Card — Benefícios Corporativos | Espírito Santo";
+
+  const canonicalEl = document.querySelector('link[rel="canonical"]');
+  if (canonicalEl) {
+    canonicalEl.href = "https://www.escardcartoes.com.br" +
+      (route === "home" ? "/" : "/" + route);
+  }
 }
 
 function capitalize(s) {

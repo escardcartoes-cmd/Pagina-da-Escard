@@ -52,11 +52,71 @@ Allow: /
 Sitemap: https://www.escardcartoes.com.br/sitemap.xml`;
 }
 
-const SPA_ROUTES = [
-  "/produtos", "/private-label", "/comparativo", "/quem-somos",
-  "/lojistas", "/blog", "/contato", "/cobranca", "/corporativos",
-  "/bem-estar", "/simulador",
-];
+const SEO_ROUTES = {
+  "/produtos": {
+    title: "Cartões de Benefícios Corporativos | ES Card",
+    description: "Multibenefícios, vale-alimentação, vale-refeição e cartão corporativo com ativação em 24h. Conheça as soluções ES Card para sua empresa.",
+  },
+  "/private-label": {
+    title: "Private Label — Cartão com a Marca da Sua Empresa | ES Card",
+    description: "Label, pós-pago e consignado com a identidade da sua marca. Aumente a fidelização do seu cliente com o cartão private label ES Card.",
+  },
+  "/comparativo": {
+    title: "ES Card vs. Mercado — Comparativo de Benefícios Corporativos",
+    description: "Compare a ES Card com outras soluções de benefícios: suporte local, custos, agilidade de implantação e cobertura de rede.",
+  },
+  "/quem-somos": {
+    title: "Quem Somos — ES Card, Benefícios com Suporte Capixaba",
+    description: "Conheça a ES Card: história, missão e o time por trás da plataforma de benefícios corporativos do Espírito Santo.",
+  },
+  "/lojistas": {
+    title: "Seja um Lojista Parceiro ES Card | Cadastre seu Estabelecimento",
+    description: "Cadastre seu estabelecimento na rede ES Card e receba pagamentos de milhares de colaboradores da região.",
+  },
+  "/blog": {
+    title: "Blog ES Card — Conteúdo para RH e Gestão de Benefícios",
+    description: "Artigos sobre benefícios corporativos, PAT, gestão de RH e tendências para empresas capixabas.",
+  },
+  "/contato": {
+    title: "Fale com um Especialista | ES Card",
+    description: "Entre em contato com a ES Card e descubra a melhor solução de benefícios corporativos para sua empresa.",
+  },
+  "/cobranca": {
+    title: "Cobrança e Recuperação de Carteiras | ES Card",
+    description: "Soluções de cobrança ativa e recuperação de carteiras para instituições financeiras e empresas.",
+  },
+  "/corporativos": {
+    title: "Cartões Corporativos — Frota, Despesas e Premiação | ES Card",
+    description: "Cartões corporativos ES Card para gestão de frota, controle de despesas e programas de premiação.",
+  },
+  "/bem-estar": {
+    title: "Bem-estar e Saúde Corporativa | ES Card",
+    description: "Wellhub, Viva+ e Vidalink integrados aos benefícios da sua empresa através da ES Card.",
+  },
+  "/simulador": {
+    title: "Simulador de Economia com PAT | ES Card",
+    description: "Calcule quanto sua empresa economiza em encargos e IR aderindo ao PAT com os benefícios ES Card.",
+  },
+};
+
+// SPA_ROUTES deriva de SEO_ROUTES para as duas listas nunca divergirem.
+const SPA_ROUTES = Object.keys(SEO_ROUTES);
+
+function injectSeoTags(html, route) {
+  const meta = SEO_ROUTES[route];
+  if (!meta) return html;
+  const canonical = "https://www.escardcartoes.com.br" + route;
+
+  return html
+    .replace(/<title>[\s\S]*?<\/title>/, "<title>" + meta.title + "</title>")
+    .replace(/(<meta name="description" content=")[^"]*(")/, "$1" + meta.description + "$2")
+    .replace(/(<link rel="canonical" href=")[^"]*(")/, "$1" + canonical + "$2")
+    .replace(/(<meta property="og:title" content=")[^"]*(")/, "$1" + meta.title + "$2")
+    .replace(/(<meta property="og:description" content=")[^"]*(")/, "$1" + meta.description + "$2")
+    .replace(/(<meta property="og:url" content=")[^"]*(")/, "$1" + canonical + "$2")
+    .replace(/(<meta name="twitter:title" content=")[^"]*(")/, "$1" + meta.title + "$2")
+    .replace(/(<meta name="twitter:description" content=")[^"]*(")/, "$1" + meta.description + "$2");
+}
 
 // ---------- /api/content ----------
 async function getContent(env) {
@@ -229,7 +289,32 @@ export default {
     if (SPA_ROUTES.includes(normalizedPath)) {
       const spaUrl = new URL(request.url);
       spaUrl.pathname = "/";
-      return env.ASSETS.fetch(new Request(spaUrl.toString(), request));
+
+      // Remove condicionais de cache para garantir que o ASSETS sempre
+      // devolva o corpo completo (um 304 sem corpo quebraria a injeção).
+      const assetHeaders = new Headers(request.headers);
+      assetHeaders.delete("if-none-match");
+      assetHeaders.delete("if-modified-since");
+      const assetRequest = new Request(spaUrl.toString(), {
+        method: request.method,
+        headers: assetHeaders,
+      });
+
+      const assetResponse = await env.ASSETS.fetch(assetRequest);
+      if (assetResponse.status !== 200) {
+        return assetResponse;
+      }
+
+      const html = await assetResponse.text();
+      const injected = injectSeoTags(html, normalizedPath);
+
+      const headers = new Headers(assetResponse.headers);
+      headers.set("Content-Type", "text/html; charset=UTF-8");
+      headers.delete("Content-Length");
+      headers.delete("ETag");
+      headers.delete("Last-Modified");
+
+      return new Response(injected, { status: 200, headers });
     }
 
     // Qualquer outra rota: serve os arquivos estáticos de /public
