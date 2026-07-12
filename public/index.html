@@ -2278,7 +2278,7 @@ window.ESCARD.renderPageSimulador = function () {
     '</div>' +
     '<section style="background:var(--offwhite);padding:0 0 64px">' +
       '<div class="container" style="max-width:1200px">' +
-        '<iframe src="/simulador.html" style="width:100%;height:calc(100vh - 68px);border:none;border-radius:var(--r16);display:block;box-shadow:var(--shadow-xl)" title="Simulador de Rentabilidade ES Card" loading="lazy"></iframe>' +
+        '<iframe src="/legacy/simulador-legado.html" style="width:100%;height:calc(100vh - 68px);border:none;border-radius:var(--r16);display:block;box-shadow:var(--shadow-xl)" title="Simulador de Rentabilidade ES Card" loading="lazy"></iframe>' +
       '</div>' +
     '</section>' +
   '</div>';
@@ -2930,6 +2930,24 @@ async function loadRemoteContent() {
     console.log("[v0] Conteúdo remoto indisponível, usando padrão:", err && err.message);
   }
 }
+
+// ---------- Sincronização inicial: pathname -> hash (rotas amigáveis) ----------
+// Usa history.replaceState (não dispara "hashchange") para evitar
+// render duplicado ou dependência da ordem de registro do listener abaixo.
+function syncPathToHash() {
+  const pathname = location.pathname;
+  if (pathname === "/") return;
+  const normalized = pathname !== "/" && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+  const path = normalized.slice(1);
+  if (E.ROUTES.some(r => r.path === path)) {
+    if (!location.hash) {
+      history.replaceState(null, "", "#" + path);
+    }
+  } else {
+    history.replaceState(null, "", "#home");
+  }
+}
+syncPathToHash();
 
 window.addEventListener("hashchange", renderApp);
 window.addEventListener("DOMContentLoaded", function () {

@@ -52,6 +52,12 @@ Allow: /
 Sitemap: https://www.escardcartoes.com.br/sitemap.xml`;
 }
 
+const SPA_ROUTES = [
+  "/produtos", "/private-label", "/comparativo", "/quem-somos",
+  "/lojistas", "/blog", "/contato", "/cobranca", "/corporativos",
+  "/bem-estar", "/simulador",
+];
+
 // ---------- /api/content ----------
 async function getContent(env) {
   try {
@@ -210,6 +216,20 @@ export default {
       return new Response(generateRobots(), {
         headers: { "Content-Type": "text/plain; charset=UTF-8" },
       });
+    }
+
+    if (pathname === "/simulador.html") {
+      return Response.redirect(new URL("/simulador", request.url).toString(), 301);
+    }
+
+    const normalizedPath = pathname !== "/" && pathname.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
+
+    if (SPA_ROUTES.includes(normalizedPath)) {
+      const spaUrl = new URL(request.url);
+      spaUrl.pathname = "/";
+      return env.ASSETS.fetch(new Request(spaUrl.toString(), request));
     }
 
     // Qualquer outra rota: serve os arquivos estáticos de /public
