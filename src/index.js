@@ -28,6 +28,30 @@ function clamp(value, max = 2000) {
   return str.slice(0, max);
 }
 
+function generateSitemap() {
+  const routes = [
+    "/", "/produtos", "/private-label", "/comparativo",
+    "/quem-somos", "/lojistas", "/blog", "/contato",
+    "/cobranca", "/corporativos", "/bem-estar",
+  ];
+  const urls = routes.map(r => `
+  <url>
+    <loc>https://www.escardcartoes.com.br${r}</loc>
+    <changefreq>weekly</changefreq>
+  </url>`).join("");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}
+</urlset>`;
+}
+
+function generateRobots() {
+  return `User-agent: *
+Allow: /
+
+Sitemap: https://www.escardcartoes.com.br/sitemap.xml`;
+}
+
 // ---------- /api/content ----------
 async function getContent(env) {
   try {
@@ -175,6 +199,18 @@ export default {
     if (pathname === "/api/admin/login" && method === "POST") return login(request, env);
     if (pathname === "/api/admin/session" && method === "GET") return session(request, env);
     if (pathname === "/api/admin/logout" && method === "POST") return logout();
+
+    if (pathname === "/sitemap.xml") {
+      return new Response(generateSitemap(), {
+        headers: { "Content-Type": "application/xml; charset=UTF-8" },
+      });
+    }
+
+    if (pathname === "/robots.txt") {
+      return new Response(generateRobots(), {
+        headers: { "Content-Type": "text/plain; charset=UTF-8" },
+      });
+    }
 
     // Qualquer outra rota: serve os arquivos estáticos de /public
     return env.ASSETS.fetch(request);
