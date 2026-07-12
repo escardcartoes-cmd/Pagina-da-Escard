@@ -226,6 +226,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   transition: all .2s ease; white-space: nowrap;
   font-family: var(--font-body);
   text-decoration: none;
+  line-height: normal;
 }
 .btn-md { font-size: 15px; padding: 13px 26px; border-radius: var(--r12); }
 .btn-sm { font-size: 14px; padding: 10px 20px; border-radius: var(--r8); }
@@ -279,6 +280,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   background: none; border: none; cursor: pointer;
   font-size: 15px; font-weight: 600; padding: 8px 14px; border-radius: var(--r8);
   color: var(--navy); transition: all .18s; font-family: inherit;
+  line-height: normal;
 }
 .nav-link:hover { color: var(--blue); background: var(--blue-pale); }
 .nav-link.active { color: var(--blue); font-weight: 700; background: var(--blue-pale); }
@@ -299,6 +301,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .nav-dd-item {
   display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
   background: none; border: none; cursor: pointer; padding: 11px 12px; border-radius: var(--r8); transition: background .15s;
+  line-height: normal;
 }
 .nav-dd-item:hover { background: var(--blue-pale); }
 .nav-dd-icon {
@@ -336,6 +339,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .mobile-menu-link {
   background: none; border: none; border-bottom: 1px solid var(--gray-100);
   color: var(--navy); font-size: 18px; font-weight: 600; padding: 16px 0; text-align: left; cursor: pointer;
+  line-height: normal;
 }
 
 /* ============================================================
@@ -530,7 +534,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .produto-name { font-family: var(--font-display); font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.3px; }
 .produto-desc { font-size: 13.5px; line-height: 1.6; color: var(--gray-500); margin-bottom: 18px; }
 .produto-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
-.produto-link { background: none; border: none; color: var(--blue); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; transition: gap .18s; }
+.produto-link { background: none; border: none; color: var(--blue); font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 4px; transition: gap .18s; line-height: normal; }
 .produto-link:hover { gap: 10px; }
 
 /* ============================================================
@@ -768,6 +772,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .cobranca-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; margin-bottom: 48px; }
 .cobranca-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--r20); padding: 28px; box-shadow: var(--shadow-sm); transition: all .22s; }
 .cobranca-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+a.cobranca-card { line-height: normal; }
  .cobranca-icon { width: 48px; height: 48px; background: var(--blue-pale); border-radius: var(--r12); display: flex; align-items: center; justify-content: center; color: var(--blue); margin-bottom: 16px; border: 1px solid rgba(27,79,216,.1); }
 
 /* Lojistas */
@@ -1148,7 +1153,7 @@ function currentRoute() {
 
 function navigate(path) {
   if (location.hash === "#" + path) {
-    renderApp(); // força re-render mesmo se a rota não mudou
+    window.ESCARD.renderApp(); // força re-render mesmo se a rota não mudou
   } else {
     location.hash = "#" + path;
   }
@@ -1166,10 +1171,10 @@ function renderNavbar(active) {
     { ic: "heart", t: "Bem-estar & Saúde", s: "Wellhub, Viva+ e Vidalink", path: "bem-estar" },
   ];
   const ddItems = SOLUCOES.map(x => `
-    <button class="nav-dd-item" data-action="nav" data-path="${x.path}">
+    <a class="nav-dd-item" data-action="nav" data-path="${x.path}" href="/${x.path}">
       <span class="nav-dd-icon" style="background:var(--blue-pale);color:var(--blue)">${ICON(x.ic, 19)}</span>
       <span class="nav-dd-text"><span class="nav-dd-title">${esc(x.t)}</span><span class="nav-dd-sub">${esc(x.s)}</span></span>
-    </button>`).join("");
+    </a>`).join("");
 
   // Itens visíveis no topo (fora do dropdown)
   const topo = [
@@ -1179,15 +1184,15 @@ function renderNavbar(active) {
     { path: "blog", label: "Blog" },
   ];
   const topoLinks = topo.map(r => `
-    <button class="nav-link${active === r.path ? " active" : ""}" data-action="nav" data-path="${r.path}">${esc(r.label)}</button>
+    <a class="nav-link${active === r.path ? " active" : ""}" data-action="nav" data-path="${r.path}" href="/${r.path}">${esc(r.label)}</a>
   `).join("");
 
   // Menu mobile: Soluções como subgrupo + itens do topo
   const mobileSolucoes = SOLUCOES.map(x => `
-    <button class="mobile-menu-link mobile-dd-item" data-action="nav" data-path="${x.path}">${esc(x.t)}</button>
+    <a class="mobile-menu-link mobile-dd-item" data-action="nav" data-path="${x.path}" href="/${x.path}">${esc(x.t)}</a>
   `).join("");
   const mobileTopo = topo.map(r => `
-    <button class="mobile-menu-link" data-action="nav" data-path="${r.path}">${esc(r.label)}</button>
+    <a class="mobile-menu-link" data-action="nav" data-path="${r.path}" href="/${r.path}">${esc(r.label)}</a>
   `).join("");
 
   const solActive = (active === "produtos" || active === "private-label" || active === "cobranca" || active === "bem-estar") ? " active" : "";
@@ -1195,9 +1200,9 @@ function renderNavbar(active) {
   return `
   <nav class="navbar" id="navbar">
     <div class="container nav-inner">
-      <button class="nav-logo" data-action="nav" data-path="home" aria-label="ES Card — Início">
+      <a class="nav-logo" data-action="nav" data-path="home" href="/" aria-label="ES Card — Início">
         <img src="${LOGO_URI}" alt="ES Card" class="nav-logo-img">
-      </button>
+      </a>
       <ul class="nav-links hide-md">
         <li class="nav-dropdown" data-action="toggle-dropdown">
           <button class="nav-link nav-dropdown-toggle${solActive}" type="button">Soluções <span class="caret">▾</span></button>
@@ -1208,7 +1213,7 @@ function renderNavbar(active) {
       <div class="nav-actions hide-md">
         <a class="nav-area-link" href="${DATA_EMPRESA.areaCliente}" target="_blank" rel="noopener">Área do Cliente</a>
         <a class="nav-area-link" href="${DATA_EMPRESA.areaLojista}" target="_blank" rel="noopener">Área do Lojista</a>
-        <button class="btn btn-primary btn-sm" data-action="nav" data-path="contato">Falar com Especialista</button>
+        <a class="btn btn-primary btn-sm" data-action="nav" data-path="contato" href="/contato">Falar com Especialista</a>
       </div>
       <button class="nav-hamburger" data-action="toggle-mobile-menu" aria-label="Abrir menu">
         <span></span><span></span><span></span>
@@ -1223,7 +1228,7 @@ function renderNavbar(active) {
     ${mobileTopo}
     <a class="mobile-menu-link" href="${DATA_EMPRESA.areaCliente}" target="_blank" rel="noopener" style="color:var(--blue)">Área do Cliente →</a>
     <a class="mobile-menu-link" href="${DATA_EMPRESA.areaLojista}" target="_blank" rel="noopener" style="color:var(--blue)">Área do Lojista →</a>
-    <button class="btn btn-primary btn-block" data-action="nav" data-path="contato" style="margin-top:12px">Falar com Especialista</button>
+    <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato" style="margin-top:12px">Falar com Especialista</a>
   </div>`;
 }
 
@@ -1238,7 +1243,7 @@ function renderFooter() {
     <div>
       <h5 class="footer-col-title">${esc(col.title)}</h5>
       <ul class="footer-link-list">
-        ${col.links.map(([l, p]) => `<li><button class="footer-link" data-action="nav" data-path="${p}">${esc(l)}</button></li>`).join("")}
+        ${col.links.map(([l, p]) => `<li><a class="footer-link" data-action="nav" data-path="${p}" href="/${p}">${esc(l)}</a></li>`).join("")}
       </ul>
     </div>
   `).join("");
@@ -1248,9 +1253,9 @@ function renderFooter() {
     <div class="container">
       <div class="footer-grid">
         <div>
-          <button class="nav-logo footer-logo-selo" data-action="nav" data-path="home" style="margin-bottom:18px" aria-label="ES Card — Início">
+          <a class="nav-logo footer-logo-selo" data-action="nav" data-path="home" href="/" style="margin-bottom:18px" aria-label="ES Card — Início">
             <img src="${LOGO_URI}" alt="ES Card" class="footer-logo-img">
-          </button>
+          </a>
           <p class="footer-desc">A plataforma de soluções em cartões e benefícios corporativos. Conectamos empresas e colaboradores com soluções que fazem diferença de verdade.</p>
           <div class="footer-social">
             <a href="${DATA_EMPRESA.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${ICON("instagram", 17)}</a>
@@ -1329,7 +1334,7 @@ function renderHero() {
           <h1 class="hero-title"><span class="hero-line">Soluções que impulsionam empresas.</span> <span class="text-gradient hero-line">Benefícios que valorizam pessoas.</span></h1>
           <p class="hero-sub">A ES Card conecta todos os tipos de empresas às <strong style="color:var(--navy);font-weight:700">soluções completas de cartões de benefícios</strong>, <strong style="color:var(--navy);font-weight:700">saúde</strong> e <strong style="color:var(--navy);font-weight:700">private label</strong>, com suporte humano local e ativação em 24h.</p>
           <div class="hero-cta-row">
-            <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Quero uma Demonstração</button>
+            <a class="btn btn-primary btn-lg" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Quero uma Demonstração</a>
           </div>
           <div class="hero-social-proof">
             <div class="avatar-stack">
@@ -1440,7 +1445,7 @@ function renderProdutoCard(p) {
     <div class="produto-name">${esc(p.nome)}</div>
     <p class="produto-desc">${esc(p.desc)}</p>
     <div class="produto-tags">${p.tags.map(t => `<span class="tag" style="background:${p.cor}1a;color:${p.cor}">${esc(t)}</span>`).join("")}</div>
-    <button class="produto-link" data-action="nav" data-path="contato">Solicitar proposta →</button>
+    <a class="produto-link" data-action="nav" data-path="contato" href="/contato">Solicitar proposta →</a>
   </div>`;
 }
 
@@ -1489,7 +1494,7 @@ function renderCalculadora() {
           <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label">${ICON("chart", 16)} Dedução IRPJ/mês</span><span class="calc-result-val" id="calcIR" style="color:var(--green)">—</span></div>
           <div class="calc-total-row"><span class="calc-total-label">${ICON("check", 16)} Economia total anual</span><span class="calc-total-val" id="calcAnual">—</span></div>
         </div>
-        <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Quero essa economia</button>
+        <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Quero essa economia</a>
         <p class="calc-disclaimer">*Simulação baseada em estimativas de mercado (≈32% encargos, ≈12% dedução IRPJ). Os percentuais reais variam conforme o regime tributário da sua empresa — consulte seu contador para o cálculo oficial.</p>
       </div>
     </div>
@@ -1535,7 +1540,7 @@ function renderSimuladorReceita() {
               <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simAno" style="color:var(--navy)">—</span></div>
             </div>
-            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Falar com especialista</a>
             <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Private Label. Os valores reais variam conforme contrato, perfil da carteira e condições de mercado.</p>
           </div>
         </div>
@@ -1571,7 +1576,7 @@ function renderSimuladorReceita() {
               <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida total/mês</span><span class="calc-result-val" id="simPosMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simPosAno" style="color:var(--navy)">—</span></div>
             </div>
-            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Falar com especialista</a>
             <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Private Pós, incluindo float em renda fixa. Os valores reais variam conforme contrato, taxas de mercado e perfil da carteira.</p>
           </div>
         </div>
@@ -1605,7 +1610,7 @@ function renderSimuladorReceita() {
               <div class="calc-result-row" style="border-bottom:none"><span class="calc-result-label" style="color:var(--gray-500)">${ICON("chart", 16)} Receita líquida estimada/mês</span><span class="calc-result-val" id="simConsMes" style="color:var(--green)">—</span></div>
               <div class="calc-total-row"><span class="calc-total-label" style="color:var(--navy)">${ICON("check", 16)} Receita líquida estimada/ano</span><span class="calc-total-val" id="simConsAno" style="color:var(--navy)">—</span></div>
             </div>
-            <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista</button>
+            <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Falar com especialista</a>
             <p class="calc-disclaimer">*Estimativa baseada em parâmetros operacionais da modalidade Consignado. Os valores reais variam conforme % de adesão real, prazo contratado e perfil da folha.</p>
           </div>
         </div>
@@ -1658,7 +1663,7 @@ function renderComparePreview() {
           '</div>';
         }).join('') +
       '</div>' +
-      '<button class="btn btn-primary btn-lg" data-action="nav" data-path="comparativo">' + ICON("target", 18) + ' Ver comparativo completo →</button>' +
+      '<a class="btn btn-primary btn-lg" data-action="nav" data-path="comparativo" href="/comparativo">' + ICON("target", 18) + ' Ver comparativo completo →</a>' +
     '</div>' +
   '</section>';
 }
@@ -1717,7 +1722,7 @@ function renderDepoimentos() {
 
 function renderBlogPreview() {
   const cards = DATA_BLOG.map((p, i) => `
-    <div class="blog-card" data-action="nav" data-path="blog">
+    <a class="blog-card" data-action="nav" data-path="blog" href="/blog">
       ${blogThumb(p, i === 0 ? "16/7" : "16/10", i === 0 ? 64 : 44)}
       <div class="blog-content" style="padding:${i === 0 ? "26px" : "20px"}">
         <span class="blog-cat" style="background:${p.catCor}1f;color:${p.catCor}">${esc(p.cat)}</span>
@@ -1725,13 +1730,13 @@ function renderBlogPreview() {
         ${i === 0 ? `<p class="blog-excerpt">${esc(p.resumo)}</p>` : ""}
         <div class="blog-meta"><span>${esc(p.data)} · ${esc(p.tempo)}</span><span class="blog-read">Ler →</span></div>
       </div>
-    </div>`).join("");
+    </a>`).join("");
   return `
   <section class="section section-white">
     <div class="container">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:48px;flex-wrap:wrap;gap:16px">
         <div class="sh left" style="margin-bottom:0"><div class="sh-eyebrow"><span class="sh-eyebrow-dash"></span>Blog</div><h2 class="sh-title">Conteúdo estratégico<br>para sua Empresa</h2></div>
-        <button class="btn btn-outline" data-action="nav" data-path="blog">Ver todos os artigos →</button>
+        <a class="btn btn-outline" data-action="nav" data-path="blog" href="/blog">Ver todos os artigos →</a>
       </div>
       <div class="blog-grid">${cards}</div>
     </div>
@@ -1767,7 +1772,7 @@ function renderCTAFinal() {
       <h2 class="cta-final-title">Pronto para benefícios que fazem<br><span>diferença de verdade?</span></h2>
       <p class="cta-final-sub">Fale com um especialista ES Card. Proposta em até 4 horas, sem compromisso.</p>
       <div class="cta-final-actions">
-        <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Solicitar Proposta Gratuita</button>
+        <a class="btn btn-primary btn-lg" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Solicitar Proposta Gratuita</a>
         <a class="btn btn-whatsapp btn-lg" href="${waLink()}" target="_blank" rel="noopener">${ICON("whatsapp", 20)} WhatsApp</a>
       </div>
       <div class="cta-final-trust">
@@ -1813,7 +1818,7 @@ function renderProdutoCardFull(p) {
     <div style="font-size:13px;color:${p.cor};font-weight:600;margin-bottom:12px">Para ${catLabel}</div>
     <p class="produto-desc" style="margin-bottom:20px">${esc(p.desc)}</p>
     <div class="produto-tags" style="margin-bottom:22px">${p.tags.map(t => `<span class="tag" style="background:${p.cor}1a;color:${p.cor}">${esc(t)}</span>`).join("")}</div>
-    <button class="btn btn-primary btn-block" style="padding:11px 0;font-size:14px" data-action="nav" data-path="contato">Solicitar Proposta →</button>
+    <a class="btn btn-primary btn-block" style="padding:11px 0;font-size:14px" data-action="nav" data-path="contato" href="/contato">Solicitar Proposta →</a>
   </div>`;
 }
 
@@ -1840,12 +1845,12 @@ window.ESCARD.renderPageProdutos = function () {
             { ic: "building", t: "Cartões Corporativos", d: "Frota, despesas, premiação, presente e consignado.", path: "corporativos" },
             { ic: "heart", t: "Bem-estar & Saúde", d: "Wellhub, Viva+ e Vidalink para cuidar das pessoas.", path: "bem-estar" },
           ].map(s => `
-            <button class="cobranca-card" data-action="nav" data-path="${s.path}" style="text-align:left;cursor:pointer;border:1px solid var(--gray-200);background:#fff">
+            <a class="cobranca-card" data-action="nav" data-path="${s.path}" href="/${s.path}" style="text-align:left;cursor:pointer;border:1px solid var(--gray-200);background:#fff">
               <div class="cobranca-icon">${ICON(s.ic, 24)}</div>
               <div style="font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px">${s.t}</div>
               <p style="font-size:13.5px;line-height:1.6;color:var(--gray-500);margin-bottom:14px">${s.d}</p>
               <span style="font-size:13px;font-weight:700;color:var(--blue)">Ver soluções →</span>
-            </button>`).join("")}
+            </a>`).join("")}
         </div>
       </div>
     </section>
@@ -1894,7 +1899,7 @@ function renderBlock(p, i) {
             <span class="bemestar-check">✓</span>${esc(f)}
           </div>`).join("")}
       </div>
-      <button class="btn btn-primary" data-action="nav" data-path="contato">Contratar ${esc(p.nome)} →</button>
+      <a class="btn btn-primary" data-action="nav" data-path="contato" href="/contato">Contratar ${esc(p.nome)} →</a>
     </div>
   </div>`;
 }
@@ -1953,7 +1958,7 @@ window.ESCARD.renderPagePrivateLabel = function () {
           <span class="bemestar-check">✓</span>${item}
         </div>`).join("")}
       <div style="margin-top:28px">
-        <button class="btn ${c.dark ? "btn-white" : "btn-primary"} btn-block" data-action="nav" data-path="contato">Quero essa solução →</button>
+        <a class="btn ${c.dark ? "btn-white" : "btn-primary"} btn-block" data-action="nav" data-path="contato" href="/contato">Quero essa solução →</a>
       </div>
     </div>`).join("");
 
@@ -1991,7 +1996,7 @@ window.ESCARD.renderPagePrivateLabel = function () {
           <div style="display:flex;justify-content:center;margin-bottom:18px;color:var(--amber)">${ICON("sparkles", 44)}</div>
           <h3 style="font-family:var(--font-display);font-size:26px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:12px">Hoje, apenas vender não é suficiente</h3>
           <p style="font-size:16px;color:rgba(255,255,255,.6);max-width:560px;margin:0 auto 28px;line-height:1.65">Com o Private Label, sua empresa evolui para um ecossistema financeiro completo — com dados reais, fidelização e mais margem.</p>
-          <button class="btn btn-amber" data-action="nav" data-path="contato">Falar sobre Private Label →</button>
+          <a class="btn btn-amber" data-action="nav" data-path="contato" href="/contato">Falar sobre Private Label →</a>
         </div>
       </div>
     </section>
@@ -2040,7 +2045,7 @@ window.ESCARD.renderPageCobranca = function () {
         </div>
         <div class="cobranca-grid">${cards}</div>
         <div style="text-align:center">
-          <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("message", 18)} Falar sobre cobrança →</button>
+          <a class="btn btn-primary btn-lg" data-action="nav" data-path="contato" href="/contato">${ICON("message", 18)} Falar sobre cobrança →</a>
         </div>
         <p style="text-align:center;font-size:12px;color:var(--gray-400);margin-top:24px">*Estimativa de mercado, não específica da carteira da ES Card. Recomendamos validar com dados internos antes de divulgar publicamente.</p>
       </div>
@@ -2084,7 +2089,7 @@ window.ESCARD.renderPageCorporativos = function () {
       <div class="container">
         <div class="cobranca-grid">${cards}</div>
         <div style="text-align:center;margin-top:8px">
-          <button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">${ICON("rocket", 18)} Falar com especialista →</button>
+          <a class="btn btn-primary btn-lg" data-action="nav" data-path="contato" href="/contato">${ICON("rocket", 18)} Falar com especialista →</a>
         </div>
       </div>
     </section>
@@ -2251,7 +2256,7 @@ window.ESCARD.renderPageQuemSomos = function () {
               <div style="display:flex;justify-content:center;margin-bottom:20px;color:var(--amber)">${ICON("heart", 60)}</div>
               <h3 style="font-family:var(--font-display);font-weight:800;font-size:20px;color:var(--navy);margin-bottom:12px">O que nos move</h3>
               <p style="font-size:14.5px;color:var(--gray-500);line-height:1.7;margin-bottom:24px">Benefícios bem estruturados fortalecem relacionamentos, elevam a satisfação e impulsionam resultados para todos.</p>
-              <button class="btn btn-primary btn-block" data-action="nav" data-path="contato">Conheça a ES Card →</button>
+              <a class="btn btn-primary btn-block" data-action="nav" data-path="contato" href="/contato">Conheça a ES Card →</a>
             </div>
           </div>
         </div>
@@ -2351,7 +2356,7 @@ window.ESCARD.renderPageComparativo = function () {
           '<p style="font-size:15px;color:rgba(255,255,255,.6);max-width:520px;margin:0 auto 28px;line-height:1.65">' +
             'Não abrimos mão de atendimento humano real. Você tem um especialista dedicado — não um número de chamado.' +
           '</p>' +
-          '<button class="btn btn-primary btn-lg" data-action="nav" data-path="contato">' + window.ICON("rocket", 18) + ' Quero uma proposta personalizada</button>' +
+          '<a class="btn btn-primary btn-lg" data-action="nav" data-path="contato" href="/contato">' + window.ICON("rocket", 18) + ' Quero uma proposta personalizada</a>' +
         '</div>' +
       '</div>' +
     '</section>' +
@@ -2446,6 +2451,9 @@ window.ESCARD.renderPageContato = function () {
 "use strict";
 const E = window.ESCARD;
 const { CONFIG, fmtBRL, currentRoute, renderNavbar, renderFooter, renderWAFloat } = E;
+// Exposto em E para que navigate() (definido em outra IIFE) possa
+// forçar um re-render ao clicar num link cuja rota já está ativa.
+E.renderApp = renderApp;
 
 const PAGE_RENDERERS = {
   "home":          E.renderPageHome,
@@ -2480,7 +2488,7 @@ function renderApp() {
       <main style="padding:120px 24px;text-align:center">
         <h1 style="font-family:var(--font-display);color:var(--navy);margin-bottom:12px">Algo deu errado ao carregar esta página</h1>
         <p style="color:var(--gray-500);margin-bottom:24px">Tente voltar para a página inicial ou recarregar.</p>
-        <button class="btn btn-primary" data-action="nav" data-path="home">Voltar para Home</button>
+        <a class="btn btn-primary" data-action="nav" data-path="home" href="/">Voltar para Home</a>
       </main>
       ${renderFooter()}
     `;
@@ -2837,6 +2845,8 @@ document.addEventListener("click", (e) => {
   const action = target.dataset.action;
 
   if (action === "nav") {
+    // Ctrl/Cmd/Shift+click ou clique do meio: deixa o navegador abrir em nova aba
+    if (e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     // Fecha o menu mobile ao navegar
     const mm = document.getElementById("mobileMenu");
