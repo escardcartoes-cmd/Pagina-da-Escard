@@ -13,7 +13,7 @@ import {
   json,
 } from "./lib/auth.js";
 
-const SECTIONS = ["empresa", "stats", "produtos", "depoimentos", "faq", "simulador"];
+const SECTIONS = ["empresa", "stats", "produtos", "depoimentos", "faq", "simulador", "blog"];
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
