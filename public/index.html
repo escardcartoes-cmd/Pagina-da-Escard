@@ -699,7 +699,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
    FOOTER
    ============================================================ */
 .footer { background: var(--navy); padding: 72px 0 36px; border-top: 1px solid rgba(255,255,255,.06); }
-.footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 56px; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr repeat(4, 1fr); gap: 44px; margin-bottom: 56px; }
+.footer-brand { max-width: 300px; }
 .footer-desc { font-size: 14px; color: rgba(255,255,255,.45); line-height: 1.75; max-width: 260px; margin-bottom: 24px; }
 .footer-social { display: flex; gap: 8px; }
  .footer-social a { width: 36px; height: 36px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r8); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.8); transition: background .2s ease, color .2s ease; }
@@ -708,6 +709,10 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .footer-link-list { display: flex; flex-direction: column; gap: 8px; }
 .footer-link { background: none; border: none; color: rgba(255,255,255,.55); font-size: 14px; cursor: pointer; transition: color .18s; padding: 0; text-align: left; }
 .footer-link:hover { color: white; }
+a.footer-link { display: inline-block; text-decoration: none; }
+.footer-link:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; border-radius: 2px; }
+@media (max-width: 1100px) { .footer-grid { grid-template-columns: repeat(3,1fr); gap: 36px; }
+  .footer-brand { grid-column: 1 / -1; max-width: 100%; } .footer-desc { max-width: 480px; } }
 .footer-bottom { padding-top: 28px; border-top: 1px solid rgba(255,255,255,.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .footer-bottom-text { font-size: 13px; color: rgba(255,255,255,.3); }
 .footer-bottom-links { display: flex; gap: 20px; }
@@ -1233,17 +1238,29 @@ function renderNavbar(active) {
 }
 
 // ---------- Footer ----------
+function footerLink([label, target, kind = "nav"]) {
+  if (kind === "ext") return `<a class="footer-link" href="${target}" target="_blank" rel="noopener">${esc(label)}</a>`;
+  if (kind === "mail") return `<a class="footer-link" href="${target}">${esc(label)}</a>`;
+  return `<a class="footer-link" data-action="nav" data-path="${target}" href="/${target}">${esc(label)}</a>`;
+}
+
 function renderFooter() {
   const cols = [
     { title: "Produtos", links: [["Multibenefícios", "produtos"], ["Cartão Alimentação", "produtos"], ["Cartão Refeição", "produtos"], ["Private Label", "private-label"], ["Cartão Corporativo", "produtos"], ["Cartão Premiação", "produtos"]] },
     { title: "Soluções", links: [["Wellhub", "bem-estar"], ["Vidalink", "bem-estar"], ["Viva+", "bem-estar"], ["Cobrança", "cobranca"], ["Lojistas", "lojistas"], ["Cooperativas", "produtos"]] },
     { title: "Empresa", links: [["Quem Somos", "quem-somos"], ["Simulador", "simulador"], ["Compare", "comparativo"], ["Blog", "blog"], ["Contato", "contato"]] },
+    { title: "Seja ES Card", links: [
+      ["Trabalhe Conosco", `mailto:${DATA_EMPRESA.email}`, "mail"],
+      ["Seja um Representante", waLink(), "ext"],
+      ["Cadastrar Estabelecimento", waLink(), "ext"],
+      ["Área do Lojista", DATA_EMPRESA.areaLojista, "ext"],
+    ] },
   ];
   const colsHtml = cols.map(col => `
     <div>
       <h5 class="footer-col-title">${esc(col.title)}</h5>
       <ul class="footer-link-list">
-        ${col.links.map(([l, p]) => `<li><a class="footer-link" data-action="nav" data-path="${p}" href="/${p}">${esc(l)}</a></li>`).join("")}
+        ${col.links.map(link => `<li>${footerLink(link)}</li>`).join("")}
       </ul>
     </div>
   `).join("");
@@ -1252,7 +1269,7 @@ function renderFooter() {
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div>
+        <div class="footer-brand">
           <a class="nav-logo footer-logo-selo" data-action="nav" data-path="home" href="/" style="margin-bottom:18px" aria-label="ES Card — Início">
             <img src="${LOGO_URI}" alt="ES Card" class="footer-logo-img">
           </a>
