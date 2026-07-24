@@ -33,6 +33,7 @@ function generateSitemap() {
     "/", "/produtos", "/private-label", "/comparativo",
     "/quem-somos", "/lojistas", "/blog", "/contato",
     "/cobranca", "/corporativos", "/bem-estar",
+    "/politica-de-privacidade",
   ];
   const urls = routes.map(r => `
   <url>
@@ -53,6 +54,10 @@ Sitemap: https://www.escardcartoes.com.br/sitemap.xml`;
 }
 
 const SEO_ROUTES = {
+  "/politica-de-privacidade": {
+    title: "Política de Privacidade | ES Card",
+    description: "Como a ES Card coleta, usa e protege seus dados pessoais, em conformidade com a LGPD (Lei 13.709/2018).",
+  },
   "/produtos": {
     title: "Cartões de Benefícios Corporativos | ES Card",
     description: "Multibenefícios, vale-alimentação, vale-refeição e cartão corporativo com ativação em 24h. Conheça as soluções ES Card para sua empresa.",

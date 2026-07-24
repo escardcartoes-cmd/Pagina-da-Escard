@@ -716,7 +716,7 @@ a.footer-link { display: inline-block; text-decoration: none; }
 .footer-bottom { padding-top: 28px; border-top: 1px solid rgba(255,255,255,.07); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .footer-bottom-text { font-size: 13px; color: rgba(255,255,255,.3); }
 .footer-bottom-links { display: flex; gap: 20px; }
-.footer-bottom-links button { background: none; border: none; font-size: 13px; color: rgba(255,255,255,.3); }
+.footer-bottom-links button, .footer-bottom-links a { background: none; border: none; font-size: 13px; color: rgba(255,255,255,.3); text-decoration: none; }
 
 /* ============================================================
    WHATSAPP FLOAT
@@ -1149,6 +1149,7 @@ const ROUTES = [
   { path: "simulador",     label: "Simulador" },
   { path: "comparativo",    label: "Compare" },
   { path: "contato",       label: "Contato" },
+  { path: "politica-de-privacidade", label: "Política de Privacidade" },
 ];
 
 function currentRoute() {
@@ -1285,7 +1286,7 @@ function renderFooter() {
       <div class="footer-bottom">
         <p class="footer-bottom-text">© 2026 ES Card · CNPJ ${esc(DATA_EMPRESA.cnpj)} · ${esc(DATA_EMPRESA.endereco)}</p>
         <div class="footer-bottom-links">
-          <button>Privacidade</button><button>Termos</button><button>LGPD</button>
+          <a href="/politica-de-privacidade" data-action="nav" data-path="politica-de-privacidade">Privacidade</a><button>Termos</button><button>LGPD</button>
         </div>
       </div>
     </div>
@@ -2284,6 +2285,124 @@ window.ESCARD.renderPageQuemSomos = function () {
 
 })();
 // ============================================================
+//  PÁGINA: POLÍTICA DE PRIVACIDADE
+// ============================================================
+(function () {
+"use strict";
+
+window.ESCARD.renderPagePolitica = function () {
+  const P  = "font-size:15.5px;line-height:1.8;color:var(--gray-600);margin:0 0 18px";
+  const H2 = "font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.3px;margin:40px 0 14px";
+  const UL = "margin:0 0 18px;padding-left:22px;color:var(--gray-600);font-size:15.5px;line-height:1.8";
+  const TABLE = "width:100%;border-collapse:collapse;margin:6px 0 24px;font-size:14.5px";
+  const TH = "text-align:left;padding:12px 14px;background:var(--gray-50);color:var(--navy);font-weight:700;border:1px solid var(--gray-200)";
+  const TD = "padding:12px 14px;color:var(--gray-600);border:1px solid var(--gray-200);line-height:1.6";
+  const LINK = "color:var(--blue)";
+  return `
+  <div class="page-in" style="padding-top:68px">
+    <div class="page-hero" style="padding:48px 0 32px">
+      <div class="container" style="text-align:center">
+        <h1 class="page-hero-title">Política de Privacidade — ES Card</h1>
+        <p class="page-hero-sub">Última atualização: 23 de julho de 2026</p>
+      </div>
+    </div>
+    <section class="section">
+      <div class="container" style="max-width:760px">
+        <p style="${P}">Esta Política descreve como a ES Card trata os dados pessoais de visitantes deste site, clientes, lojistas credenciados e demais titulares, em conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).</p>
+
+        <h2 style="${H2}">1. Quem é o controlador dos dados</h2>
+        <p style="${P}"><strong>ES Card Benefícios Ltda.</strong>, inscrita no CNPJ sob o nº 58.411.199/0001-20, atuando sob o nome fantasia <strong>Escard Cartões e Benefícios</strong>.</p>
+        <p style="${P}">Endereço: Av. Nossa Senhora da Penha, 699 — Century Towers — Santa Lúcia, Vitória/ES — CEP 29056-926</p>
+        <p style="${P}"><strong>Encarregado pelo Tratamento de Dados (DPO):</strong> Roberto Cassiano Romualdo de Almeida</p>
+        <p style="${P}"><strong>Contato do Encarregado:</strong> <a href="mailto:administracao@escardcartoes.com.br" style="${LINK}">administracao@escardcartoes.com.br</a></p>
+
+        <h2 style="${H2}">2. Quais dados coletamos</h2>
+        <p style="${P}"><strong>Dados que você nos fornece.</strong> Nome, e-mail, telefone e WhatsApp, nome e CNPJ da empresa, cargo, número de colaboradores, segmento de atuação e demais informações preenchidas em formulários, simuladores e solicitações de proposta.</p>
+        <p style="${P}"><strong>Dados coletados automaticamente.</strong> Endereço IP, tipo de dispositivo e navegador, páginas visitadas, tempo de permanência, origem do acesso e identificadores de cookies.</p>
+        <p style="${P}"><strong>Dados de lojistas.</strong> Razão social, CNPJ, endereço do estabelecimento, dados bancários e chave PIX para liquidação, e dados do responsável legal.</p>
+        <p style="${P}">Não coletamos dados pessoais sensíveis por meio deste site. Não solicitamos senhas, dados completos de cartão ou documentos por formulário aberto.</p>
+
+        <h2 style="${H2}">3. Para que usamos e com que base legal</h2>
+        <table style="${TABLE}">
+          <thead><tr><th style="${TH}">Finalidade</th><th style="${TH}">Base legal (Art. 7º da LGPD)</th></tr></thead>
+          <tbody>
+            <tr><td style="${TD}">Responder solicitações de contato e proposta comercial</td><td style="${TD}">Procedimentos preliminares de contrato (inciso V)</td></tr>
+            <tr><td style="${TD}">Executar contratos de convênio e credenciamento</td><td style="${TD}">Execução de contrato (inciso V)</td></tr>
+            <tr><td style="${TD}">Emitir e administrar cartões e cargas</td><td style="${TD}">Execução de contrato (inciso V)</td></tr>
+            <tr><td style="${TD}">Enviar comunicações comerciais e materiais informativos</td><td style="${TD}">Consentimento (inciso I)</td></tr>
+            <tr><td style="${TD}">Prevenir fraude e garantir a segurança da operação</td><td style="${TD}">Legítimo interesse (inciso IX)</td></tr>
+            <tr><td style="${TD}">Melhorar o site e medir desempenho</td><td style="${TD}">Legítimo interesse (inciso IX)</td></tr>
+            <tr><td style="${TD}">Cumprir obrigações legais, fiscais e regulatórias</td><td style="${TD}">Obrigação legal (inciso II)</td></tr>
+          </tbody>
+        </table>
+
+        <h2 style="${H2}">4. Com quem compartilhamos</h2>
+        <p style="${P}">Compartilhamos dados apenas quando necessário, com:</p>
+        <ul style="${UL}">
+          <li><strong>Instituições financeiras e processadoras parceiras</strong>, para emissão, processamento e liquidação de transações</li>
+          <li><strong>Prestadores de serviço de tecnologia</strong> — hospedagem, análise de tráfego e comunicação — sob contrato de confidencialidade</li>
+          <li><strong>Autoridades públicas</strong>, quando houver obrigação legal, regulatória ou ordem judicial</li>
+          <li><strong>Parceiros de bem-estar</strong> (Wellhub, Vidalink, Viva+), exclusivamente para beneficiários que aderirem a esses produtos</li>
+        </ul>
+        <p style="${P}">Não vendemos, alugamos nem cedemos dados pessoais para fins publicitários de terceiros.</p>
+
+        <h2 style="${H2}">5. Por quanto tempo guardamos</h2>
+        <table style="${TABLE}">
+          <thead><tr><th style="${TH}">Tipo de dado</th><th style="${TH}">Prazo de retenção</th></tr></thead>
+          <tbody>
+            <tr><td style="${TD}">Leads que não se tornaram clientes</td><td style="${TD}">24 meses a contar do último contato</td></tr>
+            <tr><td style="${TD}">Dados contratuais de convênios e lojistas</td><td style="${TD}">Duração do contrato + 5 anos</td></tr>
+            <tr><td style="${TD}">Registros fiscais e contábeis</td><td style="${TD}">5 anos, conforme legislação tributária</td></tr>
+            <tr><td style="${TD}">Registros de acesso à aplicação</td><td style="${TD}">6 meses (Marco Civil da Internet, Art. 15)</td></tr>
+            <tr><td style="${TD}">Dados com base em consentimento para marketing</td><td style="${TD}">Até a revogação do consentimento</td></tr>
+          </tbody>
+        </table>
+        <p style="${P}">Encerrado o prazo, os dados são eliminados ou anonimizados.</p>
+
+        <h2 style="${H2}">6. Seus direitos</h2>
+        <p style="${P}">Nos termos do Art. 18 da LGPD, você pode solicitar a qualquer momento:</p>
+        <ul style="${UL}">
+          <li>Confirmação da existência de tratamento</li>
+          <li>Acesso aos seus dados</li>
+          <li>Correção de dados incompletos, inexatos ou desatualizados</li>
+          <li>Anonimização, bloqueio ou eliminação de dados desnecessários ou excessivos</li>
+          <li>Portabilidade a outro fornecedor</li>
+          <li>Eliminação dos dados tratados com base no seu consentimento</li>
+          <li>Informação sobre com quem compartilhamos seus dados</li>
+          <li>Revogação do consentimento</li>
+          <li>Oposição a tratamento realizado com base em legítimo interesse</li>
+        </ul>
+        <p style="${P}">Para exercer qualquer um desses direitos, escreva para <a href="mailto:administracao@escardcartoes.com.br" style="${LINK}">administracao@escardcartoes.com.br</a>. Responderemos em até 15 dias.</p>
+
+        <h2 style="${H2}">7. Cookies</h2>
+        <p style="${P}">Utilizamos cookies para manter o funcionamento do site, lembrar preferências e medir desempenho. Você pode bloqueá-los nas configurações do seu navegador — cookies essenciais, se bloqueados, podem impedir o funcionamento de partes do site.</p>
+        <p style="${P}">O detalhamento das categorias e prazos será publicado na Política de Cookies.</p>
+
+        <h2 style="${H2}">8. Segurança</h2>
+        <p style="${P}">Adotamos medidas técnicas e administrativas para proteger seus dados, incluindo criptografia em trânsito (HTTPS), controle de acesso por perfil, segregação de ambientes e registro de auditoria.</p>
+        <p style="${P}">Nenhum sistema é infalível. Em caso de incidente de segurança com risco relevante aos titulares, comunicaremos os afetados e a Autoridade Nacional de Proteção de Dados (ANPD), conforme o Art. 48 da LGPD.</p>
+
+        <h2 style="${H2}">9. Transferência internacional</h2>
+        <p style="${P}">Alguns prestadores de serviço de infraestrutura podem processar dados fora do Brasil. Nesses casos, exigimos garantias contratuais de proteção equivalentes às previstas na LGPD.</p>
+
+        <h2 style="${H2}">10. Menores de idade</h2>
+        <p style="${P}">Este site é destinado a maiores de 18 anos e não coleta intencionalmente dados de crianças e adolescentes.</p>
+
+        <h2 style="${H2}">11. Alterações nesta política</h2>
+        <p style="${P}">Podemos atualizar esta Política. Alterações relevantes serão comunicadas nesta página, com nova data de atualização. Recomendamos revisão periódica.</p>
+
+        <h2 style="${H2}">12. Contato</h2>
+        <p style="${P}"><strong>Encarregado pelo Tratamento de Dados:</strong> Roberto Cassiano Romualdo de Almeida</p>
+        <p style="${P}"><strong>E-mail:</strong> <a href="mailto:administracao@escardcartoes.com.br" style="${LINK}">administracao@escardcartoes.com.br</a></p>
+        <p style="${P}"><strong>Endereço:</strong> Av. Nossa Senhora da Penha, 699 — Century Towers — Santa Lúcia, Vitória/ES — CEP 29056-926</p>
+        <p style="${P}">Você também pode peticionar diretamente à Autoridade Nacional de Proteção de Dados pelo site <a href="https://www.gov.br/anpd" target="_blank" rel="noopener" style="${LINK}">gov.br/anpd</a>.</p>
+      </div>
+    </section>
+  </div>`;
+};
+
+})();
+// ============================================================
 //  PÁGINA: SIMULADOR
 // ============================================================
 (function () {
@@ -2485,6 +2604,7 @@ const PAGE_RENDERERS = {
   "simulador":     E.renderPageSimulador,
   "comparativo":    E.renderPageComparativo,
   "contato":       E.renderPageContato,
+  "politica-de-privacidade": E.renderPagePolitica,
 };
 
 function renderApp() {
@@ -2532,6 +2652,7 @@ function renderApp() {
     simulador: "Simulador de Rentabilidade — Private Label e Consignado | ES Card",
     comparativo: "Compare: ES Card vs. Mercado — Benefícios Corporativos | ES Card",
     contato: "Solicitar Proposta Gratuita | ES Card",
+    "politica-de-privacidade": "Política de Privacidade | ES Card",
   };
   document.title = titles[route] || "ES Card — Benefícios Corporativos | Espírito Santo";
 
