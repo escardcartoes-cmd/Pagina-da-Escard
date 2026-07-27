@@ -239,11 +239,11 @@
       }
     
       function syncLabel(cfg){
-        var out = document.getElementById("val-" + cfg.key);
+        var out = document.getElementById("esc-val-" + cfg.key);
         if(out){ out.textContent = state[cfg.key].toFixed(cfg.decimals); }
       }
       function bind(cfg){
-        var input = document.getElementById("ctl-" + cfg.key);
+        var input = document.getElementById("esc-ctl-" + cfg.key);
         if(!input){ return; }
         input.value = String(state[cfg.key]);
         syncLabel(cfg);
@@ -289,7 +289,7 @@
         }
         for(j = 0; j < CONTROLS.length; j++){
           cfg = CONTROLS[j];
-          input = document.getElementById("ctl-" + cfg.key);
+          input = document.getElementById("esc-ctl-" + cfg.key);
           if(input){ input.value = String(state[cfg.key]); }
           syncLabel(cfg);
         }
