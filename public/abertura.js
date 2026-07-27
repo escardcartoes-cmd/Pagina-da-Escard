@@ -22,6 +22,13 @@
   function injetar(){
     if(document.getElementById("esc-ab")){ return; }
 
+    /* ja vista nesta sessao: nao injeta nada e sai limpo */
+    if(ESC_CONFIG.umaVezPorSessao && window.sessionStorage){
+      try{
+        if(sessionStorage.getItem("escardAberturaVista")){ return; }
+      }catch(e){}
+    }
+
     var st = document.createElement("style");
     st.textContent = CSS;
     document.head.appendChild(st);
@@ -52,10 +59,6 @@
     
       /* ---------- integração ---------- */
       var CONFIG = ESC_CONFIG;
-    
-      if(CONFIG.umaVezPorSessao && window.sessionStorage){
-        try{ if(sessionStorage.getItem("escardAberturaVista")){ remover(); return; } }catch(e){}
-      }
     
       var FLOW_FRAC = 0.2248;   /* magnitude media do campo no disco */
       var DEFAULTS = { speed: 12, amp: 140, zoomloop: 60, zoom: 0.05, exposure: 1.00, scale: 1.00 };
